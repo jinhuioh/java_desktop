@@ -14,7 +14,8 @@ public class codingTest {
 //		알바생 강호
 		//큰수부터 정렬을 한다!
 //		입력
-//		첫째 줄에 스타박스 앞에 서 있는 사람의 수 N이 주어진다. N은 100,000보다 작거나 같은 자연수이다. 둘째 줄부터 총 N개의 줄에 각 사람이 주려고 하는 팁이 주어진다. 팁은 100,000보다 작거나 같은 자연수이다.
+//		첫째 줄에 스타박스 앞에 서 있는 사람의 수 N이 주어진다. N은 100,000보다 작거나 같은 자연수이다. 
+//		둘째 줄부터 총 N개의 줄에 각 사람이 주려고 하는 팁이 주어진다. 팁은 100,000보다 작거나 같은 자연수이다.
 //
 //		출력
 //		강호가 받을 수 있는 팁의 최댓값을 출력한다.
@@ -23,11 +24,12 @@ public class codingTest {
 		
 		int n = Integer.parseInt(br.readLine());
 		// 팁의 최대값 변수
-		int answer = 0;
+		// n의 최대값이 100,000이므로 int로 변수를 생성하면 오버플로우 문제가 발생할 수 있기 때문에 long으로 변수를 잡아준다.
+		long answer = 0;
 		
 		//팁들을 넣을 리스트 변수
 		List <Integer> tips = new ArrayList<Integer>();
-		for(int i=1; i<=n; i++) {
+		for(int i=0; i<n; i++) {
 			//tip입력받기
 			int tip = Integer.parseInt(br.readLine());
 			tips.add(tip);
@@ -35,6 +37,7 @@ public class codingTest {
 		//큰 수부터 정렬
 		Collections.sort(tips, Collections.reverseOrder());
 		
+		//받을 수 있는 팁의 최대값 구하기
 		for(int j=0; j < tips.size(); j++) {
 			int tipget = 0;
 			//음수인 경우 팁 받지 않음
