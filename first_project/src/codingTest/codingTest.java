@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -60,24 +61,60 @@ public class codingTest {
 
 		// 정렬해서 가운데 값으로 출력
 
+//		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//		//집의 개수 입력받기// 구지 double로 안받아서 범위문제는 일어나지 않는다..int로 해도 됨.
+//		double n = Integer.parseInt(br.readLine());
+//		
+//		//집 입력받기
+//		StringTokenizer st = new StringTokenizer(br.readLine());
+//		
+//		//집을 리스트에 하나씩 넣기
+//		List<Double> nums = new ArrayList<Double>();
+//		for(int i=0; i<n; i++) {
+//			nums.add((double) Integer.parseInt(st.nextToken()));
+//		}
+//		
+//		//정렬하기
+//		Collections.sort(nums);
+//		//가운데 값 찾기
+//		double midnum = nums.get((int)((n-1)/2));
+//	System.out.println((int)midnum);
+		
+		
+		//카드 문자열
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		//집의 개수 입력받기// 구지 double로 안받아서 범위문제는 일어나지 않는다..int로 해도 됨.
-		double n = Integer.parseInt(br.readLine());
-		
-		//집 입력받기
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		//집을 리스트에 하나씩 넣기
-		List<Double> nums = new ArrayList<Double>();
+		int n = Integer.parseInt(br.readLine());
 		for(int i=0; i<n; i++) {
-			nums.add((double) Integer.parseInt(st.nextToken()));
-		}
+			//문자개수 입력
+			int num = Integer.parseInt(br.readLine());
+			//문자입력
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			
+			//답이 될 리스트 생성
+			LinkedList<String> nlist = new LinkedList<String>();
+			//입력받은 문자를 하나씩 뽑아서 리스트에 붙여줌
+			//첫 단어 add
+			nlist.add(st.nextToken());
+			for(int k=1; k<num; k++) {
+				String word = st.nextToken();
+				//리스트 0번째 값보다 다음값이 크다면
+				if(word.compareTo(nlist.getFirst())>0) {
+					nlist.addLast(word);
+					
+				}
+				else {
+					nlist.addFirst(word);
+				}//else	
+			}//for
+			for(int l=0; l<nlist.size(); l++) {
+				System.out.print(nlist.get(l));
+			}
+			//개행
+			System.out.println();
+		}//for
 		
-		//정렬하기
-		Collections.sort(nums);
-		//가운데 값 찾기
-		double midnum = nums.get((int)((n-1)/2));
-	System.out.println((int)midnum);
+		
+		
 	}
 	
 
