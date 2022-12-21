@@ -114,6 +114,87 @@ public class codingTest {
 //		}//for
 		
 		
+		//초콜릿식사
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		//먹어야하는 초콜릿개수 입력k
+		int k = Integer.parseInt(br.readLine());
+		
+		//쪼갤 수 있는 초콜릿 개수 리스트
+		List<Integer> arr = new ArrayList<Integer>();
+		
+		int i=1;
+		//초기값 입력
+		arr.add(i);
+		while (i < k) {
+			i *= 2;
+			arr.add(i);
+			
+		}//while
+		
+		//구매해야하는 초콜릿 크기. 배열의 마지막 값을 가져온다.
+		int size = arr.get(arr.size()-1);
+		//몇 번 쪼개는지
+		int count = 0;
+		
+		
+		//리스트 뒤부터 탐색
+//		System.out.println("arr 사이즈는"+arr.size());
+		//k와 arr마지막 값이 같은 경우
+		if(k == size) {
+		}//if
+
+		else {
+			for(int l=arr.size()-1; l>=0; l--) {
+//				System.out.println("l은~ "+arr.get(l));
+				if(arr.get(l) <= k) {
+					k = k-arr.get(l);
+//					System.out.println("k>> "+ k +"count>> "+ count);
+				}
+				count++;
+				if(k==0) {
+					//k가 0 이 되는 경우도 계산하므로 1을 빼준다.
+					count = count-1;
+					break;
+				}//if
+			}//for
+		}//else
+		System.out.print(size+" "+count);
+		
+		
+	//리스트를 이용하지 않는 방법. 메모리상으로는 더 효율적인 것 같다..
+//	Scanner scan = new Scanner(System.in);
+//    int k1 = scan.nextInt();	
+//	int size1 = 1;
+//	int count1 = 0;
+//	int size2 = 0;	
+//	
+//	while(size1 < k1) {
+//		size1 = size1 * 2;
+//		size2 = size1;
+//	}
+//	// K크기의 초콜릿을 얻기 위해서는 그와 같거나 큰 초콜릿이 필요하다.
+//    // 2제곱근으로 증가한다고 하니 2씩 곱해주어 가장작은
+//    // 초콜릿 크기를 구한다.
+//    
+//    
+//	while(k1 > 0) {
+//		if(k1>=size1) {
+//			System.out.println("k가 size보다 크거나같"+"k"+k1+"size"+size1);
+//			k1-=size1;
+//		}else {
+//			System.out.println("k가 size보다 작다"+"k"+k1+"size"+size1);
+//			System.out.println("count"+count1);
+//			size1 /= 2;
+//			count1++;
+//		}
+//	}
+//	//최소 초콜릿의 크기가 K보다 클경우 반으로 쪼개고
+//    //count를 하나씩 더해준다.
+//    //K 가 0보다 작아지면 해당 반복문을 중단한다.
+//    
+//    
+//	System.out.println(size2+" " + count1);
 		
 	}
 	
