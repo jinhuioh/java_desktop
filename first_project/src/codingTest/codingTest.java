@@ -82,36 +82,36 @@ public class codingTest {
 		
 		
 		//카드 문자열
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(br.readLine());
-		for(int i=0; i<n; i++) {
-			//문자개수 입력
-			int num = Integer.parseInt(br.readLine());
-			//문자입력
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			
-			//답이 될 리스트 생성
-			LinkedList<String> nlist = new LinkedList<String>();
-			//입력받은 문자를 하나씩 뽑아서 리스트에 붙여줌
-			//첫 단어 add
-			nlist.add(st.nextToken());
-			for(int k=1; k<num; k++) {
-				String word = st.nextToken();
-				//리스트 0번째 값보다 다음값이 크다면
-				if(word.compareTo(nlist.getFirst())>0) {
-					nlist.addLast(word);
-					
-				}
-				else {
-					nlist.addFirst(word);
-				}//else	
-			}//for
-			for(int l=0; l<nlist.size(); l++) {
-				System.out.print(nlist.get(l));
-			}
-			//개행
-			System.out.println();
-		}//for
+//		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//		int n = Integer.parseInt(br.readLine());
+//		for(int i=0; i<n; i++) {
+//			//문자개수 입력
+//			int num = Integer.parseInt(br.readLine());
+//			//문자입력
+//			StringTokenizer st = new StringTokenizer(br.readLine());
+//			
+//			//답이 될 리스트 생성
+//			LinkedList<String> nlist = new LinkedList<String>();
+//			//입력받은 문자를 하나씩 뽑아서 리스트에 붙여줌
+//			//첫 단어 add
+//			nlist.add(st.nextToken());
+//			for(int k=1; k<num; k++) {
+//				String word = st.nextToken();
+//				//리스트 0번째 값보다 다음값이 크다면
+//				if(word.compareTo(nlist.getFirst())>0) {
+//					nlist.addLast(word);
+//					
+//				}
+//				else {
+//					nlist.addFirst(word);
+//				}//else	
+//			}//for
+//			for(int l=0; l<nlist.size(); l++) {
+//				System.out.print(nlist.get(l));
+//			}
+//			//개행
+//			System.out.println();
+//		}//for
 		
 		
 		
