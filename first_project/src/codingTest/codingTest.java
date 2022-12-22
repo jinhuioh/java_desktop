@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 
 public class codingTest {
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	public static void main(String[] args) throws NumberFormatException, IOException, InterruptedException {
 //		알바생 강호
 		//큰수부터 정렬을 한다!
 //		입력
@@ -115,52 +115,52 @@ public class codingTest {
 		
 		
 		//초콜릿식사
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		//먹어야하는 초콜릿개수 입력k
-		int k = Integer.parseInt(br.readLine());
-		
-		//쪼갤 수 있는 초콜릿 개수 리스트
-		List<Integer> arr = new ArrayList<Integer>();
-		
-		int i=1;
-		//초기값 입력
-		arr.add(i);
-		while (i < k) {
-			i *= 2;
-			arr.add(i);
-			
-		}//while
-		
-		//구매해야하는 초콜릿 크기. 배열의 마지막 값을 가져온다.
-		int size = arr.get(arr.size()-1);
-		//몇 번 쪼개는지
-		int count = 0;
-		
-		
-		//리스트 뒤부터 탐색
-//		System.out.println("arr 사이즈는"+arr.size());
-		//k와 arr마지막 값이 같은 경우
-		if(k == size) {
-		}//if
-
-		else {
-			for(int l=arr.size()-1; l>=0; l--) {
-//				System.out.println("l은~ "+arr.get(l));
-				if(arr.get(l) <= k) {
-					k = k-arr.get(l);
-//					System.out.println("k>> "+ k +"count>> "+ count);
-				}
-				count++;
-				if(k==0) {
-					//k가 0 이 되는 경우도 계산하므로 1을 빼준다.
-					count = count-1;
-					break;
-				}//if
-			}//for
-		}//else
-		System.out.print(size+" "+count);
-		
+//		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//		
+//		//먹어야하는 초콜릿개수 입력k
+//		int k = Integer.parseInt(br.readLine());
+//		
+//		//쪼갤 수 있는 초콜릿 개수 리스트
+//		List<Integer> arr = new ArrayList<Integer>();
+//		
+//		int i=1;
+//		//초기값 입력
+//		arr.add(i);
+//		while (i < k) {
+//			i *= 2;
+//			arr.add(i);
+//			
+//		}//while
+//		
+//		//구매해야하는 초콜릿 크기. 배열의 마지막 값을 가져온다.
+//		int size = arr.get(arr.size()-1);
+//		//몇 번 쪼개는지
+//		int count = 0;
+//		
+//		
+//		//리스트 뒤부터 탐색
+////		System.out.println("arr 사이즈는"+arr.size());
+//		//k와 arr마지막 값이 같은 경우
+//		if(k == size) {
+//		}//if
+//
+//		else {
+//			for(int l=arr.size()-1; l>=0; l--) {
+////				System.out.println("l은~ "+arr.get(l));
+//				if(arr.get(l) <= k) {
+//					k = k-arr.get(l);
+////					System.out.println("k>> "+ k +"count>> "+ count);
+//				}
+//				count++;
+//				if(k==0) {
+//					//k가 0 이 되는 경우도 계산하므로 1을 빼준다.
+//					count = count-1;
+//					break;
+//				}//if
+//			}//for
+//		}//else
+//		System.out.print(size+" "+count);
+//		
 		
 	//리스트를 이용하지 않는 방법. 메모리상으로는 더 효율적인 것 같다..
 //	Scanner scan = new Scanner(System.in);
@@ -196,6 +196,45 @@ public class codingTest {
 //    
 //	System.out.println(size2+" " + count1);
 		
+		
+		//너비우선탐색
+//		정수 a를 k로 만들기
+//		홀수면 -1하고 짝수면 나누기2
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		int a = Integer.parseInt(st.nextToken());
+		int k = Integer.parseInt(st.nextToken());
+		//연산횟수 count
+		int count = 0;
+		
+		while(true) {
+//			Thread.sleep(1000);
+//			System.out.println(k+" "+a);
+			//a==k이면 break
+			if (a==k) {
+				break;
+			}
+			//짝수인경우
+			if(k%2==0) {
+//				k/2가 a보다 작으면 나누셈을 못하고 전부 -1을 해줘야하므로 k-a를 count에 넣어준다.그 후 break
+				if(k/2 < a) {
+					count += k-a;
+					break;
+				}
+				k = k/2;
+				count++;
+//				System.out.println("짝수여서 나누어줌"+k);
+			}
+			//홀수인경우
+			else {
+				k -=1;
+				count++;
+//				System.out.println("홀수여서 -1>>"+k);
+			}//else
+		}//while
+		System.out.println(count);
 	}
 	
 
