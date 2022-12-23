@@ -29,59 +29,67 @@ public class codingTest2 {
 //	2 9
 //	4 5
 //	4 6
-	static int n,p1,p2;
+
+	static int n,m,p1,p2;
 	static int[][] map;
-	static int[] answer_map;
+	static int[]d;
+	static StringTokenizer st;
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); 
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		//사람 전체 수 입력
 		n = Integer.parseInt(br.readLine());
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		//위치 넣을 배열//사람숫자를 1부터 세므로 n+1까지 배열의 범위를 만들어주어야한다.
+		//사람수만큼 map범위 설정
 		map = new int[n+1][n+1];
-		//정답증가시킬 배열
-		answer_map = new int[n+1];
+		d = new int[n+1];
 		
-		//구해야하는 변수값
+		st = new StringTokenizer(br.readLine());
+		//구해야하는 사람 번호
 		p1 = Integer.parseInt(st.nextToken());
 		p2 = Integer.parseInt(st.nextToken());
-		
-		//촌수 개수
-		int m = Integer.parseInt(br.readLine());
-		
+		//촌수개수
+		m = Integer.parseInt(br.readLine());
+
 		for(int i=0; i<m; i++) {
 			StringTokenizer st1 = new StringTokenizer(br.readLine());
 			int x = Integer.parseInt(st1.nextToken());
 			int y = Integer.parseInt(st1.nextToken());
-			map[x][y] = 1;
-			map[y][x] = 1;
+			
+			//map에 넣기 촌수는 서로 연결되어있는 것이므로 x,y에 넣고 y,x에도 넣어준다.
+			map[x][y]=1;
+			map[y][x]=1;
 		}//for
+
+		//d배열로 촌수를 세는 함수를 호출
 		bfs(p1, p2);
-		if(answer_map[p2]==0) {
+		if(d[p2]==0) {
 			System.out.println(-1);
 		}
 		else {
-			System.out.println(answer_map[p2]);
+			System.out.println(d[p2]);
 		}
+		
 	}
-	//함수생성
 	private static void bfs(int start, int end) {
-		Queue<Integer> q = new LinkedList<Integer>();
-		//start부터 탐색 시작
+		//queue 생성
+		Queue<Integer> q = new LinkedList<Integer>(); 
+		//시작값 넣기
 		q.add(start);
+		
+		//end가 될 때까지 while문돌면서 촌수 증가시키기
 		while(!q.isEmpty()) {
 			int qpoll = q.poll();
-			//end값이면 종료
-			if(qpoll == end) {
+			if(qpoll==end) {
 				break;
 			}//if
-			//탐색하기
 			for(int i=1; i<=n; i++) {
-				if(map[qpoll][i] ==1 && answer_map[i] == 0) {
-					answer_map[i] = answer_map[qpoll]+1;
+				//촌수를 센 적없고 && 촌수가 연결되어 있는 경우 
+				if(d[i]==0 && map[qpoll][i]==1) {
+					//세어준다.
+					d[i] = d[qpoll]+1;
+					//세어준 위치로 이동
 					q.add(i);
-				}
+				}//if
 			}//for
-		}
-	}
+		}//while
+	}//private
 }
