@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class codingTest {
-
+	//static=전역 , final=최종적인, 즉 수정불가능한 변수.
+	//static final=상수
+	static final int[] dr = {-1, 0, 1, 0};
+	static final int[] dc = {0, 1, 0, -1};
 	public static void main(String[] args) throws NumberFormatException, IOException, InterruptedException {
 //		알바생 강호
 		//큰수부터 정렬을 한다!
@@ -200,42 +204,107 @@ public class codingTest {
 		//너비우선탐색
 //		정수 a를 k로 만들기
 //		홀수면 -1하고 짝수면 나누기2
+//		나눈값이 a보다 작은 경우는 전부 -1로 계산해야함!
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+//		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//		StringTokenizer st = new StringTokenizer(br.readLine());
+//		
+//		int a = Integer.parseInt(st.nextToken());
+//		int k = Integer.parseInt(st.nextToken());
+//		//연산횟수 count
+//		int count = 0;
+//		
+//		while(true) {
+////			Thread.sleep(1000);
+////			System.out.println(k+" "+a);
+//			//a==k이면 break
+//			if (a==k) {
+//				break;
+//			}
+//			//짝수인경우
+//			if(k%2==0) {
+////				k/2가 a보다 작으면 나누셈을 못하고 전부 -1을 해줘야하므로 k-a를 count에 넣어준다.그 후 break
+//				if(k/2 < a) {
+//					count += k-a;
+//					break;
+//				}
+//				k = k/2;
+//				count++;
+////				System.out.println("짝수여서 나누어줌"+k);
+//			}
+//			//홀수인경우
+//			else {
+//				k -=1;
+//				count++;
+////				System.out.println("홀수여서 -1>>"+k);
+//			}//else
+//		}//while
+//		System.out.println(count);
 		
-		int a = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(st.nextToken());
-		//연산횟수 count
-		int count = 0;
 		
-		while(true) {
-//			Thread.sleep(1000);
-//			System.out.println(k+" "+a);
-			//a==k이면 break
-			if (a==k) {
-				break;
-			}
-			//짝수인경우
-			if(k%2==0) {
-//				k/2가 a보다 작으면 나누셈을 못하고 전부 -1을 해줘야하므로 k-a를 count에 넣어준다.그 후 break
-				if(k/2 < a) {
-					count += k-a;
-					break;
-				}
-				k = k/2;
-				count++;
-//				System.out.println("짝수여서 나누어줌"+k);
-			}
-			//홀수인경우
-			else {
-				k -=1;
-				count++;
-//				System.out.println("홀수여서 -1>>"+k);
-			}//else
-		}//while
-		System.out.println(count);
+		//양한마리 양두마리
+		
+//		 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//	        StringBuilder sb = new StringBuilder();
+//	        StringTokenizer st;
+//
+//	        int T = Integer.parseInt(br.readLine());
+//	        for (int tc = 0; tc < T; tc++) {
+//	            st = new StringTokenizer(br.readLine());
+//	            int H = Integer.parseInt(st.nextToken());
+//	            int W = Integer.parseInt(st.nextToken());
+//	            boolean[][] map = new boolean[H][W];
+//	            boolean[][] visit = new boolean[H][W];
+//
+//	            for (int i = 0; i < H; i++) {
+//	                String input = br.readLine();
+//	                for (int j = 0; j < W; j++) {
+////	                #이면map에 true넣기
+//	                    map[i][j] = input.charAt(j) == '#';
+////	                    System.out.println(map[i][j]);
+//	                }
+//	            }
+//	            //정답(result)를 sb를 이용하여 저장+개행 후 sysout으로 한개씩 출력해준다.
+//	            sb.append(bfs(H, W, map, visit)).append("\n");
+//	        }
+//	        //append해준 마지막 개행을 제외 = setlength(sb의 길이 -1)
+//	        sb.setLength(sb.length() - 1);
+//	        System.out.println(sb);
+//	    }//public
+//
+//	    private static int bfs(int H, int W, boolean[][] map, boolean[][] visit) {
+//	        int result = 0;
+//	        Queue<int[]> queue = new LinkedList<>();
+//	        for (int i = 0; i < H; i++) {
+//	            for (int j = 0; j < W; j++) {
+//	            	
+////	            	map이 true이고 visit이 true가 아니면 양이 있는곳을 세지 않는 것이므로 result증가
+//	                if (map[i][j] && !visit[i][j]) {
+//	                    result++;
+//	                    //offer=add. 새로운 int배열에 i,j넣은것을 큐에 add해줌
+//	                    queue.offer(new int[]{i, j});
+////	                    visit을 true로 바꿈
+//	                    visit[i][j] = true;
+//	                    //동서남북으로 양 무리를 세어준다.
+//	                    while (!queue.isEmpty()) {
+//	                        int[] cur = queue.poll();
+//
+//	                        for (int d = 0; d < 4; d++) {
+//	                            int nr = cur[0] + dr[d];
+//	                            int nc = cur[1] + dc[d];
+//
+//	                            //그래프 범위를 벗어난다면 continue 
+//	                            if (nr < 0 || nr >= H || nc < 0 || nc >= W || !map[nr][nc] || visit[nr][nc]) continue;
+//	                           //그래프 범위를 벗어나지 않는다면 true로 바꾸고 queue에 이동할 수 있는 위치를 offer해준다.
+//	                            visit[nr][nc] = true;
+//	                            queue.offer(new int[]{nr, nc});
+//	                        }//for
+//	                    }//while
+//	                }//if
+//	            }//for
+//	        }//for
+//	        System.out.println("result>>"+result);
+//	        return result;
+//	    }//함수 끝
 	}
-	
-
-}
+	}
