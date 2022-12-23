@@ -8,96 +8,80 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class codingTest2 {
-	//상하좌우 좌표 생성
-	 static final int[] dx = {-1, 0, 1, 0};
-	 static final int[] dy = {0, 1, 0, -1};
+//촌수계산
+//	입력
+//	사람들은 1, 2, 3, …, n (1 ≤ n ≤ 100)의 연속된 번호로 각각 표시된다. 입력 파일의 첫째 줄에는 전체 사람의 수 n이 주어지고, 
+//	둘째 줄에는 촌수를 계산해야 하는 서로 다른 두 사람의 번호가 주어진다. 그리고 셋째 줄에는 부모 자식들 간의 관계의 개수 m이 주어진다. 
+//	넷째 줄부터는 부모 자식간의 관계를 나타내는 두 번호 x,y가 각 줄에 나온다. 이때 앞에 나오는 번호 x는 뒤에 나오는 정수 y의 부모 번호를 나타낸다.
+//
+//	각 사람의 부모는 최대 한 명만 주어진다.
+//
+//	출력
+//	입력에서 요구한 두 사람의 촌수를 나타내는 정수를 출력한다. 어떤 경우에는 두 사람의 친척 관계가 전혀 없어 촌수를 계산할 수 없을 때가 있다. 이때에는 -1을 출력해야 한다
+//	//예제입력
+//	9
+//	7 3
+//	7
+//	1 2
+//	1 3
+//	2 7
+//	2 8
+//	2 9
+//	4 5
+//	4 6
+	static int n,p1,p2;
+	static int[][] map;
+	static int[] answer_map;
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		//양한마리 양두마리.. 너비우선탐색
-//		입력
-//		첫 번째 줄은 테스트 케이스의 수를 나타나는 T를 입력받는다.
-//
-//		이후 각 테스트 케이스의 첫 번째 줄에서는 H,W 를 입력받는다. H는 그리드의 높이이고, W는 그리드의 너비이다. 이후 그리드의 높이 H 에 걸쳐서 W개의 문자로 이루어진 문자열 하나를 입력받는다. 
-//
-//		0 < T ≤ 100
-//		0 < H, W ≤ 100
-//		출력
-//		각 테스트 케이스마다, 양의 몇 개의 무리로 이루어져 있었는지를 한 줄에 출력하면 된다. 
-//		입력예제:
-//		2
-//		4 4
-//		#.#.
-//		.#.#
-//		#.##
-//		.#.#
-//		3 5
-//		###.#
-//		..#..
-//		#.###
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		int t = Integer.parseInt(br.readLine());
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); 
+		n = Integer.parseInt(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		for(int i=0; i<t; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-//			높이와 너비 입력
-			int H = Integer.parseInt(st.nextToken());
-			int W = Integer.parseInt(st.nextToken());
-			
-			boolean[][] graph1 = new boolean[H][W];
-			boolean[][] graph2 = new boolean[H][W];
-			
-			for(int k=0; k<H; k++) {
-				//#.입력받기
-				String Words = br.readLine();
-				for(int l=0; l<W; l++) {
-					//샵이면 graph1에 true넣기
-					graph1[k][l] = Words.charAt(l)=='#';
-				}//for
-			}//for
-//			함수호출해서 count계산하기. 
-			//stringbuilder에 정답 append하기!!
-			sb.append(bfs(H,W,graph1,graph2)).append("\n");
+		//위치 넣을 배열//사람숫자를 1부터 세므로 n+1까지 배열의 범위를 만들어주어야한다.
+		map = new int[n+1][n+1];
+		//정답증가시킬 배열
+		answer_map = new int[n+1];
+		
+		//구해야하는 변수값
+		p1 = Integer.parseInt(st.nextToken());
+		p2 = Integer.parseInt(st.nextToken());
+		
+		//촌수 개수
+		int m = Integer.parseInt(br.readLine());
+		
+		for(int i=0; i<m; i++) {
+			StringTokenizer st1 = new StringTokenizer(br.readLine());
+			int x = Integer.parseInt(st1.nextToken());
+			int y = Integer.parseInt(st1.nextToken());
+			map[x][y] = 1;
+			map[y][x] = 1;
 		}//for
-		sb.setLength(sb.length()-1);//마지막 개행 빼기! 필요없음
-		System.out.println(sb);
-	}//public
-	
-	//함수생성 graph2로 count할 함수
-	private static int bfs(int H, int W, boolean[][] graph1, boolean[][] graph2) {
-		//양 무리 세기 변수
-		int count = 0;
-		//큐
-		Queue<int[]> queue = new LinkedList<>(); 
-		for(int k=0; k<H; k++) {
-			for(int l=0; l<W; l++) {
-				if(graph1[k][l] && !graph2[k][l]) {
-					count++;
-					graph2[k][l]=true;
-					//큐에 값 넣어주기//큐를 쓰는 이유는 result1에서 true인 경우의 위치값(k,l)만 빼서 해당 위치값으로부터 동서남북으로  true인 경우를 계산해야하기 때문!
-					queue.offer(new int[] {k,l});
-					
-					//동서남북으로 전부 true로 바꾸기//while문 안돌리면 동서남북4군데 1번만 돌기 때문에 1칸을 넘어가는 범위에 대해서는 계산이 안된다.
-					//따라서 큐로 값을 받은 후 while로 graph1의 false전까지 전부 graph2를 true로 바꾸어주면 된다. 
-					while (!queue.isEmpty()) {
-                        int[] cur = queue.poll();
-
-                        for (int d = 0; d < 4; d++) {
-                            int ny = cur[0] + dy[d];
-                            int nx = cur[1] + dx[d];
-
-                            //그래프 범위를 벗어난다면 continue 
-                            //그래프의 범위가 0부터 시작하므로 가장 끝 자리는  W-1과 H-1이다. 따라서nx >= W ,ny >= H 인 경우 continue해줘야한다.
-                            if (ny < 0 || ny >= H || nx < 0 || nx >= W || !graph1[ny][nx] || graph2[ny][nx]) continue;
-                           //그래프 범위를 벗어나지 않는다면 true로 바꾸고 queue에 이동할 수 있는 위치를 offer해준다.
-                            graph2[ny][nx] = true;
-                            queue.offer(new int[]{ny, nx});
-							}//for
-					}//WHile
-					
-				}//if
+		bfs(p1, p2);
+		if(answer_map[p2]==0) {
+			System.out.println(-1);
+		}
+		else {
+			System.out.println(answer_map[p2]);
+		}
+	}
+	//함수생성
+	private static void bfs(int start, int end) {
+		Queue<Integer> q = new LinkedList<Integer>();
+		//start부터 탐색 시작
+		q.add(start);
+		while(!q.isEmpty()) {
+			int qpoll = q.poll();
+			//end값이면 종료
+			if(qpoll == end) {
+				break;
+			}//if
+			//탐색하기
+			for(int i=1; i<=n; i++) {
+				if(map[qpoll][i] ==1 && answer_map[i] == 0) {
+					answer_map[i] = answer_map[qpoll]+1;
+					q.add(i);
+				}
 			}//for
-		}//for
-		return count;
-	}//함수
-
+		}
+	}
 }
