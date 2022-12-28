@@ -3,96 +3,134 @@ package codingTest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.StringTokenizer;
-
-//바닥 장식
+//배추
+//입력
+//입력의 첫 줄에는 테스트 케이스의 개수 T가 주어진다. 그 다음 줄부터 각각의 테스트 케이스에 대해 첫째 줄에는 배추를 심은 배추밭의 가로길이 M(1 ≤ M ≤ 50)과 세로길이 N(1 ≤ N ≤ 50),
+//그리고 배추가 심어져 있는 위치의 개수 K(1 ≤ K ≤ 2500)이 주어진다. 그 다음 K줄에는 배추의 위치 X(0 ≤ X ≤ M-1), Y(0 ≤ Y ≤ N-1)가 주어진다. 두 배추의 위치가 같은 경우는 없다.
+//
+//출력
+//각 테스트 케이스에 대해 필요한 최소의 배추흰지렁이 마리 수를 출력한다.
+//
+//예제 입력 1 
+//2
+//10 8 17
+//0 0
+//1 0
+//1 1
+//4 2
+//4 3
+//4 5
+//2 4
+//3 4
+//7 4
+//8 4
+//9 4
+//7 5
+//8 5
+//9 5
+//7 6
+//8 6
+//9 6
+//10 10 1
+//5 5
+//예제 출력 1 
+//5
+//1
 public class codingTest3 {
-//	이제 ‘-’와 ‘|’로 이루어진 바닥 장식 모양이 주어진다. 만약 두 개의 ‘-’가 인접해 있고, 같은 행에 있다면, 두 개는 같은 나무 판자이고, 
-//	두 개의 ‘|’가 인접해 있고, 같은 열에 있다면, 두 개는 같은 나무 판자이다.
-//
-//	기훈이의 방 바닥을 장식하는데 필요한 나무 판자의 개수를 출력하는 프로그램을 작성하시오.
-//	입력
-//	첫째 줄에 방 바닥의 세로 크기N과 가로 크기 M이 주어진다. 
-//	둘째 줄부터 N개의 줄에 M개의 문자가 주어진다. 이것은 바닥 장식 모양이고, '-‘와 ’|‘로만 이루어져 있다.
-//	N과 M은 50 이하인 자연수이다.
-//
-//	출력
-//	첫째 줄에 문제의 정답을 출력한다.
-
-	// 예제입력
-//	6 9
-//	-||--||--
-//	--||--||-
-//	|--||--||
-//	||--||--|
-//	-||--||--
-//	--||--||-
-//	
-//	답: 31
-	static int n;// 행
-	static int m;// 열
-	static int answer = 0;// 정답이 될 변수
-
+	static int c;//테스트 개수
+	static int n;//세로
+	static int m;//가로
+	static int k;//배추 개수
+	static int count;
+	static int[][] map;//배추 표시할 배열
+	static boolean[][] visited;//탐색했는지 판단할 배열
+	static int[] dx = {0,1,0,-1};
+	static int[] dy = {1,0,-1,0};
+	static StringBuilder sb = new StringBuilder();
 	public static void main(String[] args) throws NumberFormatException, IOException {
-
+		
+		Queue<Integer> one = new LinkedList<Integer>();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		c = Integer.parseInt(br.readLine());
+		for(int i1=0; i1<c; i1++) {
+			int count = 0;
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			m = Integer.parseInt(st.nextToken());
+			n = Integer.parseInt(st.nextToken());
+			k = Integer.parseInt(st.nextToken());
+			map = new int[m][n];
+			visited = new boolean[m][n];
+			for(int i=0; i<k; i++) {
+				StringTokenizer st1 = new StringTokenizer(br.readLine());
+				int y = Integer.parseInt(st1.nextToken());//가로 위치
+				int x = Integer.parseInt(st1.nextToken());//세로 위치
+				map[y][x]=1;//배추 표시
+			}//for
+			bfs();
+			
+		}//for
 
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		char[][] arr = new char[n][m];
-
-		for (int i = 0; i < n; i++) {
-			// 한 줄 입력받기
-			String row = br.readLine();
-			for (int j = 0; j < m; j++) {
-				arr[i][j] = row.charAt(j);
-			} // for
-		} // for
+		sb.setLength(sb.length()-1);
+		System.out.println(sb);
 		
-		// - 개수
-		// -나오면 count = 1로 바꿨다가 ㅣ 나오면 count = 0으로 초기화
-		int count = 0;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-//				System.out.println("arr[i][j]>>"+i+j+arr[i][j]);
-				if(arr[i][j] == '|') {
-//					System.out.println("l인경우 count>> "+count);
-//					System.out.println("l인경우 answer>> "+answer);
-					count=0;
-				}//if
-				//행이 바뀌는데 첫번째-의 경우 count의 값을 0으로 초기화
-				else if(j == 0 && arr[i][j] == '-') {
-					count=0;
-				}//else if
-				if(count == 0 && arr[i][j] == '-') {
-					count=1;
-					//정답 개수 증가 시키기
-					answer++;
-//					System.out.println("-인경우 count>> "+count);
-//					System.out.println("-인경우 answer>> "+answer);
-				}//else if
+	}//public
+	
+	private static void bfs() {
+	int count = 0;
+	//0,0부터 탐색
+	for(int i=0; i<m; i++) {
+		for(int j=0; j<n; j++) {
+//			System.out.println(i+" "+j);
+//			System.out.println("배추가 있는가?>>"+map[i][j]);
+			//이미 탐색했거나, 배추가 있는 곳이 아니면 continue 
+			if(visited[i][j] || map[i][j] != 1) {
+//				System.out.println("패스!~~~");
+				continue;
+			}//if
+			//현재위치 방문!
+			visited[i][j] = true;
+			
+//				System.out.println("visited>>"+visited[i][j]);
+			Queue<int[]> q = new LinkedList<int[]>();
+			q.add(new int[] {i,j});
+			//아래와 같이 하면 오류남
+			//Queue<Integer> q = new LinkedList<Integer>();
+			//q.add(i);
+			//q.add(j);
+			count++;//여기서 값 증가 시켜주고 while문으로 연결된 모든 배추를 true로 바꿔준다...
+			while(!q.isEmpty()) {
+				int qi = q.peek()[0];
+				int qj = q.peek()[1];
+				q.poll();
+				visited[qi][qj]=true;
+//				System.out.println("qi>>"+qi);
+//				System.out.println("qj>>"+qj);
+				for(int p=0; p<4; p++) {
+						int ny = qi + dy[p];
+						int nx = qj + dx[p];
+						//범위를 벗어나면 continue 또는 배추가 있는곳이 아니면!
+						if(ny<0 || ny>=m || nx<0 || nx>=n || map[ny][nx] != 1) {
+							continue;
+						}
+						//이미 방문했으면 (true면) continue
+						if(visited[ny][nx]) {
+//							System.out.println("이미 true");
+							continue;
+						}//if
+						visited[ny][nx]=true;
+						q.add(new int[] {ny,nx});
+//						System.out.println("count>>====== "+count+" nynx: "+ny+nx);
+					}//p for
+				}//while
 			}//for
 		}//for
+		sb.append(count).append("\n");
+	}//private
 		
-		// | 개수
-		int count2 =0;
-		for (int j = 0; j < m; j++) {
-			for (int i = 0; i < n; i++) {
-				if(arr[i][j] == '-') {
-					count2=0;
-				}//if
-				//열이 바뀌고 행이1인데 이전 열 마지막값과 다음열 첫번째 값이 |인 경우
-				else if(i == 0 && arr[i][j] == '|') {
-					count2=0;
-				}//else if
-				if(count2 == 0 && arr[i][j] == '|') {
-					count2=1;
-					//정답 개수 증가 시키기
-					answer++;
-				}//else if
-			}//for
-		}//for
-		System.out.println(answer);
-	    }
+	
 }
