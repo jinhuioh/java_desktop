@@ -14,47 +14,28 @@ import java.util.StringTokenizer;
 public class codingTest1 {
 
 	public static void main(String[] args) throws IOException {
-//		수리공 항승
-
+//	세로로 입력
+//	입력
+//	총 다섯줄의 입력이 주어진다. 각 줄에는 최소 1개, 최대 15개의 글자들이 빈칸 없이 연속으로 주어진다. 주어지는 글자는 영어 대문자 ‘A’부터 ‘Z’, 영어 소문자 ‘a’부터 ‘z’, 숫자 ‘0’부터 ‘9’ 중 하나이다. 각 줄의 시작과 마지막에 빈칸은 없다.
+//
+//	출력
+//	영석이가 세로로 읽은 순서대로 글자들을 출력한다. 이때, 글자들을 공백 없이 연속해서 출력한다. 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());//물 새는 곳 개수
-		int l = Integer.parseInt(st.nextToken());//테이프길이
-		
-		//답이 될 변수
-		int answer = 0;
-		
-//		고장난 파이프 입력받기
-		int[] pipes = new int[n];
-//		토큰으로 한줄입력받아서 한개씩 끊어서 int로 형변환 후 저장
-		st = new StringTokenizer(br.readLine());
-		for(int i=0; i<pipes.length; i++) {
-			pipes[i] = Integer.parseInt(st.nextToken());
-		}
-		//sort로 작은수부터 리스트에 담기도록 한다
-		Arrays.sort(pipes);
-//		System.out.println("pipes>> "+pipes);
-		
-		
-		float pnum = 0;//테이프
-		
-		for(int j=0; j<pipes.length; j++) {
-//			리스트에 있는 원소 하나씩 꺼내서  pint 에 담기
-			int pint = (int) pipes[j];
-//			System.out.println("pint"+pint);
-//			System.out.println(pipes.length+" "+j);
-			// 리스트에서 꺼 낸 원소가 짧아서 테이프를 붙어야하는 경우
-			if(pnum < pint + 0.5) {
-				answer +=1;
-				//붙인 테이프의 마지막위치 pnum 갱신
-				pnum = (float) (pint+l-(0.5));
-//				System.out.println("pnum>> "+pnum);
-			}else {
-				// 리스트에서 꺼 낸 원소가 길어서 테이프를 붙이지않아도 되는 경우
-				continue;
-			}//else
+		char[][] map = new char[15][15];
+		for(int i=0; i<5; i++) {
+			String words = br.readLine();
+			for(int j=0; j<words.length(); j++) {
+				map[j][i] = words.charAt(j);
+			}
 		}//for
-		System.out.println(answer);
+		for(int i=0; i<15; i++) {
+			for(int j=0; j<15; j++) {
+				if(map[i][j]=='\0') {
+					continue;
+				}
+				System.out.print(map[i][j]);
+			}
+		}
 	}
 
 }
