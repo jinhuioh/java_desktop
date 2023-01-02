@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 public class codinTest6 {
 //	점프점프
 //	문제
@@ -27,54 +29,32 @@ public class codinTest6 {
 //	예제 출력 1 
 //	5
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		//가장 큰 수를 골라서 옮겨가면 된다.         
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int n = Integer.parseInt(br.readLine());
-		int[] map = new int[n];
-		StringTokenizer st = new StringTokenizer(br.readLine()," ");
-		for(int i = 0; i<n; i++) {
-			map[i] = Integer.parseInt(st.nextToken());
-		}//for
+		int[] arr = new int [n+1];
+		long[] dp = new long[1101];//n의 범위 최대1000 + 점프의 최대값 100 + 1인덱스부터시작
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-//		int[] indexarr = new int[n];
-//		
-//		for(int k=0; k<n; k++) {
-//			indexarr[k] = k;
-//		}
-		//왼쪽부터 시작 초기값
-		int index = 0;
-		Queue<Integer> q = new LinkedList<Integer>();
-		q.add(index);
-		//정답 변수
-		int count = 0;
-		int answer = 0;
-		while(!q.isEmpty()) {
-			//첫번째 위치의 인덱스값
-			int now = q.poll();
-			//해당위치의 값
-			int visited = map[now];
-			System.out.println("now 와 visited>>"+now+" "+visited);
-			
-			int[] max_num = new int[visited+1];//인덱스 배열//해당위치에서 이동할 수 있는 가장 큰 인덱스를 구하기 위함.
-			for(int j = 1; j<= visited; j++) {
-				max_num[j]= map[now + j];
-				//이동한 위치 
-				System.out.println("이동한 위치~~~~~~~~"+max_num[j]);
+		for(int i=1; i<=n; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+			dp[i] = Integer.MAX_VALUE;//int의 최대값 (2,147,483,647)으로 dp를 구성
+			System.out.println(dp[i]);
+		}
+		dp[1]=0;//1번째는 0부터 시작 점프할때마다 +1 해줌
+		
+		for(int i=1; i<=n; i++) {
+			//최소값으로 값 갱신이 안되었다면 continue ex) arr값이 0이면 for문을 안돌아서 최소값 갱신 안됨.
+			if(dp[i] >= Integer.MAX_VALUE) continue; 
+			for(int j=1; j<=arr[i]; j++) {
+				//dp의 범위가 i를 벗어나면 전부 0 이 들어있으므로 최소값은 0이된다.
+				dp[j+i] = Math.min(dp[i+j], dp[i]+1);//지금 위치의dp값과 이전값에 +1 한걸로 비교. 점프할때마다 +1됨.
+				System.out.println("i>> "+i+" j>> "+j+" dp[j+i]>> "+dp[j+i]);
 			}
-			Arrays.sort(max_num);
-			answer = map[now + max_num[max_num.length-1]];// 현재위치 + 가장 큰 값
-			System.out.println("max넘의 길이"+max_num.length);
-			System.out.println(max_num.length-1);
-			System.out.println("maxnum의 마지막값인덱스"+max_num[max_num.length-1]);
-			//이동할 위치 인덱스
-			System.out.println("answer>> "+answer+"현재 인덱스값!!>> "+now + max_num[max_num.length-1]);
-			//마지막이면 break
-			if(answer == map[map.length-1]) {
-				System.out.println("count>>"+count);
-				break;
-			}//if
-			System.out.println("answer"+answer);
-			q.add(answer);//이동할 위치
+		}//for
+		if(dp[n] >= Integer.MAX_VALUE) {
+			System.out.println(-1);
+		}else {
+			System.out.println(dp[n]);
 		}
 	}
 
