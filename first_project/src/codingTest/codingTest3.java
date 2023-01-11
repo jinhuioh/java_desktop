@@ -15,85 +15,90 @@ import java.util.StringTokenizer;
 
 import javax.management.Query;
 import javax.swing.JPopupMenu.Separator;
-//미로 탐색
-//N×M크기의 배열로 표현되는 미로가 있다.
-//미로에서 1은 이동할 수 있는 칸을 나타내고, 0은 이동할 수 없는 칸을 나타낸다. 
-//이러한 미로가 주어졌을 때, (1, 1)에서 출발하여 (N, M)의 위치로 이동할 때 지나야 하는 최소의 칸 수를 구하는 프로그램을 작성하시오.
-//한 칸에서 다른 칸으로 이동할 때, 서로 인접한 칸으로만 이동할 수 있다.
-//
-//위의 예에서는 15칸을 지나야 (N, M)의 위치로 이동할 수 있다. 
-//칸을 셀 때에는 시작 위치와 도착 위치도 포함한다.
-
+//적록색약
 //입력
-//첫째 줄에 두 정수 N, M(2 ≤ N, M ≤ 100)이 주어진다. 다음 N개의 줄에는 M개의 정수로 미로가 주어진다. 각각의 수들은 붙어서 입력으로 주어진다.
+//첫째 줄에 N이 주어진다. (1 ≤ N ≤ 100)
+//
+//둘째 줄부터 N개 줄에는 그림이 주어진다.
 //
 //출력
-//첫째 줄에 지나야 하는 최소의 칸 수를 출력한다. 항상 도착위치로 이동할 수 있는 경우만 입력으로 주어진다.
-
+//적록색약이 아닌 사람이 봤을 때의 구역의 개수와 적록색약인 사람이 봤을 때의 구역의 수를 공백으로 구분해 출력한다.
+//
 //예제 입력 1 
-//4 6
-//101111
-//101010
-//101011
-//111011
+//5
+//RRRBB
+//GGBBB
+//BBBRR
+//BBRRR
+//RRRRR
 //예제 출력 1 
-//15
+//4 3
 public class codingTest3 {
-	static int n,m;
-	static int[][] map;//입력받은 그래프 넣을 배열
-	static int[][] map_bfs;//이동한 칸 개수
-	static boolean[][] visited;//방문했는지 채크할 배열
+	static int n;
+	static char[][] map1, map2;//입력받은 그래프 넣을 배열
+	static boolean[][] visited1,visited2;//방문했는지 채크할 배열
 	static int[] dx = {0,1,0,-1};
 	static int[] dy = {1,0,-1,0};
 	
-	private static int bfs(int i, int j) {
-		map_bfs = new int[n][m];
-		visited = new boolean[n][m];
-		map_bfs[i][j] = 1;
-		Queue<int []> q = new LinkedList<int []>();
-		q.add(new int[]{i,j});//초기값 0,0이 들어감
+	private static void bfs(int i, int j, char[][] map, boolean[][] visited) {
+		char word = map[i][j];
+		Queue<int[]> q = new LinkedList<int[]>();
+		q.add(new int[] {i,j});
 		visited[i][j] = true;
 		while (!q.isEmpty()) {
-			int x = q.peek()[0];//세로
-			int y = q.peek()[1];//가로
+			int y = q.peek()[0];
+			int x = q.peek()[1];
 			q.poll();
 			for(int k = 0; k<4; k++) {
-				int nx = x + dx[k];
-				int ny = y + dy[k];
-//				System.out.println("nx ny>> "+nx+" "+ny);
-				//이미 방문했거나 범위를 벗어나면 continue
-				if(nx < 0|| nx >= n || ny < 0 || ny >= m) {
-//					System.out.println("continue>>  "+nx+" "+ny);
-					continue;
+				int ny = y+ dy[k];
+				int nx = x+ dx[k];
+				if(ny<0 || ny>=n || nx<0 || nx>=n ) continue;
+				if(!visited[ny][nx] && map[ny][nx] == word) {
+					visited[ny][nx] = true;
+					q.add(new int[] {ny, nx});
 				}
-				//0은 이동할 수 없는 칸
-				if(visited[nx][ny] || map[nx][ny]==0) continue;
-				visited[nx][ny] = true;
-				map_bfs[nx][ny] = map_bfs[x][y] + 1;//이동한 칸 개수
-//				System.out.println("nxny add>>>>"+nx+" "+ ny);
-				q.add(new int[] {nx, ny});
 			}
-		}//while
-		return map_bfs[n-1][m-1];
+		}
 	}
+	
     public static void main(String[] args) throws IOException {
 	   BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	   StringTokenizer st = new StringTokenizer(br.readLine());
-	   n = Integer.parseInt(st.nextToken());
-	   m = Integer.parseInt(st.nextToken());
-	   
-	   map = new int[n][m];
-	   
-	   for(int i=0; i<n; i++) {
-		   String s = br.readLine();//공백없이 한 줄로 입력받으므로 stringtokenizer대신 string으로 받는다.
-		   for(int j=0; j<m; j++) {
-			 map[i][j] = s.charAt(j)-'0';  
-//		   System.out.println(map[i][j] );
+	   n = Integer.parseInt(br.readLine());
+	   map1 = new char[n][n];
+	   map2 = new char[n][n];
+	   visited1 = new boolean[n][n];
+	   visited2 = new boolean[n][n];
+	   for(int i = 0; i<n; i++) {
+		   String s = br.readLine();
+		   for(int j = 0; j<n; j++) {
+			   char one = s.charAt(j);
+			   map1[i][j] = one;
+			   map2[i][j] = one;
+			   if(one =='G') {
+				   map2[i][j] = 'R';
+			   }
 		   }//for
 	   }//for
-	   //1은 이동 가능 0,0에서 시작
-	   int answer = bfs(0, 0);
-	   System.out.println(answer);
+	   
+		   
+	   int count1 = 0;//적록색약아님
+	   int count2 = 0;//적록색약
+	   for(int i = 0; i<n; i++) {
+		   for(int j = 0; j<n; j++) {
+			   if(visited1[i][j]) continue;
+			   count1++;
+			   bfs(i, j, map1, visited1);
+		   }
+	   }
+	   //적록색약이면 빨강 == 파랑
+	   for(int i = 0; i<n; i++) {
+		   for(int j = 0; j<n; j++) {
+			   if(visited2[i][j]) continue;
+			   count2++;
+			   bfs(i, j, map2, visited2);
+		   }
+	   }//for
+	   System.out.println(count1+" "+count2);
     }
 
 }
