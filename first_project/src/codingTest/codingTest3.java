@@ -49,108 +49,101 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
-
 import javax.management.Query;
 import javax.swing.JPopupMenu.Separator;
-public class codingTest3 {
-	static int l,r,c;//층수,행,열
-	static char[][][] map;
-	static int[][][] arr;
-	static boolean[][][] visited;
-	static int[] dz = {-1,1,0,0,0,0};
-	static int[] dy = {0,0,1,-1,0,0};
-	static int[] dx = {0,0,0,0,-1,1};
-	
-	private static int bfs(int i, int j, int k) {
-		int answer = 0;
-		int end = 0;
-		visited[i][j][k] = true;
-		Queue<int[]> q = new LinkedList<int[]>();
-		q.add(new int[] {i,j,k});
-		Loop1 :
-		while (!q.isEmpty()) {
-			int z = q.peek()[0];
-		    int y = q.peek()[1];
-	        int x = q.peek()[2];
-	        q.poll();
-			for(int i1 = 0; i1<6; i1++) {
-				int nz = z + dz[i1];
-				int ny = y + dy[i1];
-				int nx = x + dx[i1];
-				
-				if(nz>=0 && nz<l && ny>=0 && ny<r && nx>=0 && nx<c && map[nz][ny][nx]=='E') {
-					arr[nz][ny][nx] = arr[z][y][x] + 1;//값 갱신
-					answer = arr[nz][ny][nx];
-//					System.out.println("nzyx>> "+nz+" "+ny+" "+nx+"여기방문..");
-					end = 1;
-					break Loop1;
-				}
-				if(nz>=0 && nz<l && ny>=0 && ny<r && nx>=0 && nx<c && !visited[nz][ny][nx] && map[nz][ny][nx]=='.') {
-					q.add(new int[] {nz,ny,nx});
-					visited[nz][ny][nx] = true;
-//					System.out.println("zyx>> "+z+" "+y+" "+x);
-//					System.out.println("nzyx>> "+nz+" "+ny+" "+nx+"가 . 입니다");
-					arr[nz][ny][nx] = arr[z][y][x] + 1;
-//					answer = arr[nz][ny][nx];
-//					System.out.println(answer);
-				}//if
-			}//for
-		}//while
-		if(end!=1) {
-			answer = 0;
-		}
-		return answer;
-	}
-	
-    public static void main(String[] args) throws IOException {
-	   BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	  
-	   while (true) {
-		   StringTokenizer st = new StringTokenizer(br.readLine());
-		   if(st.countTokens()==0) {
-			   st = new StringTokenizer(br.readLine());
-		   }
-		   l = Integer.parseInt(st.nextToken());
-		   r = Integer.parseInt(st.nextToken());
-		   c = Integer.parseInt(st.nextToken());
 
-		   if(l==0 && r==0 && c==0) {
-			   System.exit(0);
-		   }
-		   map = new char[l][r][c];
-		   arr = new int[l][r][c];
-		   visited = new boolean[l][r][c];
-		   //start부분을 넣을 큐
-		   Queue<int[]> q = new LinkedList<int[]>();
-		   for(int i = 0; i<l; i++) {
-			   for(int j = 0; j<r; j++) {
-				   String s = br.readLine();
-				   if(s.equals("")) {
-					   s = br.readLine();//한 줄 공백이 들어오면 다시 한 줄 입력 받음
-				   }
-				   for(int k = 0; k<c; k++) {
-					   map[i][j][k] = s.charAt(k);
-					   //만약 s가 입력되면 큐에 넣어준다.
-					   if(map[i][j][k]=='S') {
-						   q.add(new int[] {i,j,k});
-					   }
-				   }//for
-			   }//for
-		   }//for
-		   
-		   //출구찾기
-		   int z = q.peek()[0];
-		   int y = q.peek()[1];
-		   int x = q.peek()[2];
-		   int answer = bfs(z,y,x);
-		   if(answer==0) {
-			   System.out.println("Trapped!");
-		   }
-		   else {
-			   System.out.println("Escaped in " +answer+ " minute(s).");
-		   }
-	   }//while
-	   
-    }
-}
-   
+public class codingTest3 {
+	 static int moveY[] = {-1,0,1,0,0,0};
+	    static int moveX[] = {0,1,0,-1,0,0};
+	    static int moveZ[] = {0,0,0,0,1,-1};
+	    static int L,R,C;
+	    static char arr[][][];
+	    static int map[][][];
+	    static boolean visit[][][],check=false;
+	    static Po start, end;
+	    public static void main(String[] args) throws IOException {
+	        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	        while(true) {
+	            check = false;
+	            StringTokenizer st = new StringTokenizer(br.readLine());
+	            if(!st.hasMoreTokens())
+	                st = new StringTokenizer(br.readLine());
+	            
+	            L = Integer.parseInt(st.nextToken());
+	            R = Integer.parseInt(st.nextToken());
+	            C = Integer.parseInt(st.nextToken());
+	            if(L==0 && R==0 && C==0) {
+	                break;
+	            }
+	            arr = new char[L][R][C];
+	            map = new int[L][R][C];
+	            visit = new boolean[L][R][C];
+	            
+	            for(int l=0; l<L; l++) {
+	                for(int r=0; r<R; r++) {
+	                    String str = br.readLine();
+	                    
+	                    if(str.equals("")) 
+	                        str = br.readLine();
+	                        
+	                    for(int c=0; c<C; c++) {
+	                        char ch = str.charAt(c);
+	                        if(ch == 'S') {
+	                            start = new Po(c,r,l);
+	                        }else if(ch == 'E') {
+	                            end = new Po(c,r,l);
+	                        }
+	                        arr[l][r][c] = ch;
+	                    }
+	                }
+	            }
+	            
+	            bfs(start);
+	            if(!check) {
+	                System.out.println("Trapped!");
+	            }
+	        }
+	        
+	        
+	    }
+	    public static void bfs(Po p) {
+	        Queue<Po> queue = new LinkedList<>();
+	        queue.add(p);
+	        visit[p.z][p.y][p.x] = true;
+	        
+	        while(!queue.isEmpty()) {
+	            Po tmp = queue.poll();
+	            if(tmp.x == end.x && tmp.y == end.y && tmp.z == end.z) {
+	                
+	                System.out.println("Escaped in "+map[tmp.z][tmp.y][tmp.x]+" minute(s).");
+	                check = true;
+	                return;
+	            }
+	            
+	            for(int d=0; d<6; d++) {
+	                int newX = tmp.x + moveX[d];
+	                int newY = tmp.y + moveY[d];
+	                int newZ = tmp.z + moveZ[d];
+	                
+	                if(0<=newX && newX<C && 0<=newY && newY<R && 0<=newZ && newZ<L && !visit[newZ][newY][newX]) {
+	                    if(arr[newZ][newY][newX]!='#') {
+	                        visit[newZ][newY][newX] = true;
+	                        map[newZ][newY][newX] = map[tmp.z][tmp.y][tmp.x] + 1;
+	                        queue.add(new Po(newX,newY,newZ));
+	                    }
+	                }
+	            }
+	        }
+	        
+	    }
+	    public static class Po{
+	        int x;
+	        int y;
+	        int z;
+	        public Po(int x,int y,int z) {
+	            this.x=x;
+	            this.y=y;
+	            this.z=z;
+	        }
+	    }
+	}
