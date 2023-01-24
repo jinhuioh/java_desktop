@@ -40,7 +40,8 @@ class indexclass{
 
 public class codingTest4 {
 
-	private static int bfs() {
+	//빙산을 녹여서 map을 갱신할 bfs함수
+	private static void bfs() {
 		for(int i = 0; i<n; i++) {
 			for(int j = 0; j<m; j++) {
 				if(map[i][j] !=0) {
@@ -56,6 +57,7 @@ public class codingTest4 {
 				}
 			}
 		}//for
+		
 		//빙하 녹이기
 		while (!q.isEmpty()) {
 			indexclass qp = q.remove();
@@ -67,32 +69,10 @@ public class codingTest4 {
 				map[y][x] = 0;
 			}//if
 		}//while
-		
-		
-//		for(int i = 0; i<n; i++) {
-//			for(int j = 0; j<m; j++) {
-//				System.out.print(map[i][j]);
-//			}
-//			System.out.println();
-//		}
-		
-		//빙하의 개수 카운트
-		visited = new boolean[n][m];
-		int count = 0;
-		for(int i = 0; i<n; i++) {
-			for(int j = 0; j<m; j++) {
-				if(map[i][j] !=0 && !visited[i][j]) {
-					count_ice(i,j);
-					count++;
-				}
-				
-			}
-		}//for
-//		System.out.println("bfs에서 countice>> "+count);
-//		System.out.println();
-		return count;
+
 	}//private
 	
+	//빙하의 개수 카운트
 	private static void count_ice(int y, int x) {
 		visited[y][x] = true;
 		Queue<indexclass> q = new LinkedList<indexclass>();
@@ -126,7 +106,7 @@ public class codingTest4 {
 		m = Integer.parseInt(st.nextToken());
 		
 		map = new int[n][m];
-		
+		//map입력받기
 		for(int i = 0; i<n; i++) {
 			StringTokenizer st1 = new StringTokenizer(br.readLine());
 			for(int j = 0; j<m; j++) {
@@ -135,43 +115,32 @@ public class codingTest4 {
 		}//for
 	
 		
-		//빙하의 개수 카운트
-		visited = new boolean[n][m];
-		int count = 0;
-		for(int i = 0; i<n; i++) {
-			for(int j = 0; j<m; j++) {
-				if(map[i][j] !=0 && !visited[i][j]) {
-					count_ice(i,j);
-					count++;
-				}
-				
-			}
-		}//for
-		if(count>=2) {
-			System.out.println(0);
-			System.exit(0);
-		}
-		
-		
-		int days = 0;
-		int result = 1;
+		int days = 0;//빙산이 2개 이상으로 쪼개질때까지 셀 날짜.
 		Loop1 :
 		while(true) {
 			int c = 0;
-			result = bfs();//나누어진 빙산의 개수
-			days++;
-//			System.out.println("날짜>> "+days);
-			if(result >= 2){
-				System.out.println(days);
-				System.exit(0);
-			}
+			//빙하의 개수 카운트. 만약 처음부터 2개로 나누어져있으면 아래 연산들을 할 필요가 없다.
+			visited = new boolean[n][m];
+			int count = 0;
 			for(int i = 0; i<n; i++) {
 				for(int j = 0; j<m; j++) {
-					if(map[i][j] !=0) {
+					if(map[i][j] !=0 && !visited[i][j]) {
 						c = 1;
+						count_ice(i,j);
+						count++;
 					}
 				}
 			}//for
+			if(count>=2) {
+				System.out.println(days);
+				System.exit(0);
+			}
+			
+			//아직 2개의 빙산으로 쪼개지지 않았다면 bfs연산 수행
+			bfs();//빙산 녹이기
+			days++;
+			
+			//모든 빙산이 녹았다면 while문 끝내기.
 			if(c==0) {
 				break Loop1;
 			}//if
