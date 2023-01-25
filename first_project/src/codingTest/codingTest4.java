@@ -8,146 +8,83 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-//빙산
-//	입력
-//	첫 줄에는 이차원 배열의 행의 개수와 열의 개수를 나타내는 두 정수 N과 M이 한 개의 빈칸을 사이에 두고 주어진다. N과 M은 3 이상 300 이하이다. 그 다음 N개의 줄에는 각 줄마다 배열의 각 행을 나타내는 M개의 정수가 한 개의 빈 칸을 사이에 두고 주어진다. 각 칸에 들어가는 값은 0 이상 10 이하이다. 배열에서 빙산이 차지하는 칸의 개수, 즉, 1 이상의 정수가 들어가는 칸의 개수는 10,000 개 이하이다. 배열의 첫 번째 행과 열, 마지막 행과 열에는 항상 0으로 채워진다.
-//
-//	출력
-//	첫 줄에 빙산이 분리되는 최초의 시간(년)을 출력한다. 만일 빙산이 다 녹을 때까지 분리되지 않으면 0을 출력한다.
-//
-//	예제 입력 1 
-//	5 7
-//	0 0 0 0 0 0 0
-//	0 2 4 5 3 0 0
-//	0 3 0 2 5 2 0
-//	0 7 6 2 4 0 0
-//	0 0 0 0 0 0 0
-//	예제 출력 1 
-//	2
-
-//행렬위치와 인접한 0의 개수를 넣을 클래스
-class indexclass{
-	int y;
-	int x;
-	int z;//상하좌우 0의 개수
-	indexclass(int y, int x, int z){
-		this.y = y;
-		this.x = x;
-		this.z = z;
-	}
-}
-
+//방문길이 프로그래머스
+//class indexclass{
+//	int y;
+//	int x;
+//	int z;
+//	indexclass(int y, int x, int z){
+//		this.y = y;
+//		this.x = x;
+//		this.z = z;
+//	}
+//}
 
 public class codingTest4 {
-
-	//빙산을 녹여서 map을 갱신할 bfs함수
-	private static void bfs() {
-		for(int i = 0; i<n; i++) {
-			for(int j = 0; j<m; j++) {
-				if(map[i][j] !=0) {
-					int count0 = 0;
-					for(int k = 0; k<4; k++) {
-						int ny = i + dy[k];
-						int nx = j + dx[k];
-						if(ny>=0 && nx>=0 && ny<n && nx<m && map[ny][nx] == 0) {
-							count0++;
-						}
-					}
-					q.add(new indexclass(i, j, count0));
-				}
-			}
-		}//for
-		
-		//빙하 녹이기
-		while (!q.isEmpty()) {
-			indexclass qp = q.remove();
-			int y = qp.y;
-			int x = qp.x;
-			int z = qp.z;
-			map[y][x] = map[y][x]-z;
-			if(map[y][x]<0) {
-				map[y][x] = 0;
-			}//if
-		}//while
-
-	}//private
+//	static int[] dx = {0,0,1,-1};
+//	static int[] dy = {-1,1,0,0};
 	
-	//빙하의 개수 카운트
-	private static void count_ice(int y, int x) {
-		visited[y][x] = true;
-		Queue<indexclass> q = new LinkedList<indexclass>();
-		q.add(new indexclass(y, x, 0));
-		
-		while (!q.isEmpty()) {
-			indexclass qp = q.remove();
-			int y1 = qp.y;
-			int x1 = qp.x;
-			for(int k = 0; k<4; k++) {
-				int ny = y1 + dy[k];
-				int nx = x1 + dx[k];
-				if(ny>=0 && nx>=0 && ny<n && nx<m && map[ny][nx] != 0 && !visited[ny][nx]) {
-					visited[ny][nx] = true;
-					q.add(new indexclass(ny, nx, 0));
-				}
-			}
-		}
-	}
-	
-	static int n,m;
-	static int[][] map;
-	static Queue<indexclass> q = new LinkedList<indexclass>();
-	static int[] dx = {0,0,-1,1};
-	static int[] dy = {-1,1,0,0};
-	static boolean[][] visited;
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
+		String dirs = br.readLine();
+		boolean[][][] visited = new boolean[11][11][4];
+		Queue<int[]> q = new LinkedList<int[]>();
+//		int[][] map = new int[11][11];
 		
-		map = new int[n][m];
-		//map입력받기
-		for(int i = 0; i<n; i++) {
-			StringTokenizer st1 = new StringTokenizer(br.readLine());
-			for(int j = 0; j<m; j++) {
-				map[i][j] = Integer.parseInt(st1.nextToken());
-			}//for
-		}//for
-	
-		
-		int days = 0;//빙산이 2개 이상으로 쪼개질때까지 셀 날짜.
-		Loop1 :
-		while(true) {
-			int c = 0;
-			//빙하의 개수 카운트. 만약 처음부터 2개로 나누어져있으면 아래 연산들을 할 필요가 없다.
-			visited = new boolean[n][m];
-			int count = 0;
-			for(int i = 0; i<n; i++) {
-				for(int j = 0; j<m; j++) {
-					if(map[i][j] !=0 && !visited[i][j]) {
-						c = 1;
-						count_ice(i,j);
-						count++;
-					}
-				}
-			}//for
-			if(count>=2) {
-				System.out.println(days);
-				System.exit(0);
+		//dirs를 숫자로 바꾸어  q에 넣기
+		for(int i=0; i<dirs.length(); i++) {
+			char sone = dirs.charAt(i);
+			if(sone=='U') {
+				q.add(new int[] {1, 0, 0});
 			}
+			else if(sone=='L') {
+				q.add(new int[] {0,-1, 1});
+			}
+			else if (sone=='D') {
+				q.add(new int[] {-1, 0, 2});
+			}
+			else {
+				q.add(new int[] {0, 1, 3});
+			}
+		}
+		//map 위치 초기값.5,5부터 시작!
+		int b = 5;
+		int a = 5;
+		int answer = 0;
+		while (!q.isEmpty()) {
+			int y = q.peek()[0];
+			int x = q.peek()[1];
+			int z = q.peek()[2];
 			
-			//아직 2개의 빙산으로 쪼개지지 않았다면 bfs연산 수행
-			bfs();//빙산 녹이기
-			days++;
+			q.remove();
 			
-			//모든 빙산이 녹았다면 while문 끝내기.
-			if(c==0) {
-				break Loop1;
-			}//if
-		}//while
-		
-		System.out.println(0);
-		
-		
+			
+			int ny = y + b;
+			int nx = x + a;
+			
+			if(ny<0 || nx<0 || ny>=11 || nx>=11) continue; 
+			
+			if(!visited[ny][nx][z]) {
+				visited[ny][nx][z] = true;
+				if(z==0) {
+					visited[b][a][2] = true;
+				}
+				else if(z==1) {
+					visited[b][a][3] = true;
+				}
+				else if(z==2) {
+					visited[b][a][0] = true;
+				}
+				else {
+					visited[b][a][1] = true;
+				}
+				answer++;
+			}
+			b = ny;
+			a = nx;//위치 갱신
+			
+		}
+		System.out.println(answer);
+//		return answer;
 	}
 }
