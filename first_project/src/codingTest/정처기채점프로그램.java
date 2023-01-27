@@ -3,9 +3,11 @@ package codingTest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-
+//내가 만든 정처기 채점프로그램!
 public class 정처기채점프로그램 {
 
 	public static void main(String[] args) throws IOException {
@@ -13,17 +15,6 @@ public class 정처기채점프로그램 {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int[][] map = new int[10][19];
 		int[][] my_map = new int[10][19];
-//		①③④④①②③④③④
-//		②②①④②②④③④③
-//		②④③②③④④③①④
-//		②①③③④②①②②③
-//		④③②②②②②③③④
-//		③②③③②④①④③①
-//		①④③②①②④③②④
-//		①③①④①③①②③②
-//		④③③③①②④④②②
-//		④①①④④④④③①④
-		
 //		① ③ ④ ④ ① ② ③ ④ ③ ④
 //		② ② ① ④ ② ② ④ ③ ④ ③
 //		② ④ ③ ② ③ ④ ④ ③ ① ④
@@ -75,84 +66,39 @@ public class 정처기채점프로그램 {
 			}
 		}//for
 		
-		
-//		for(int i = 0; i<10; i++) {
-//			for(int j = 0; j<19; j++) {
-//				System.out.print(my_map[i][j]);
-//			}
-//			System.out.println();
-//		}//for
-		
-		
+	
 		int c = 0;
-		System.out.println("틀린거!");
-		for(int i = 0; i<10; i++) {
-			for(int j = 0; j<19; j++) {
-				if(my_map[i][j] != map[i][j]) {  
-					System.out.print((i*10+((j+1)/2)+1) + "번  ");
-					c = 1;
+		int p = 0;//각 과목 틀린거 카운트할 변수
+		int pall = 0;//전체 몇개틀렸는지 카운트할 변수
+		for(int k=1; k<=5; k++) {
+			p=0;//초기화
+			List<Integer> answer = new ArrayList<Integer>();//틀린번호 넣을 리스트
+			for(int i =k*2-2; i<=k*2-1; i++) {
+				for(int j = 0; j<19; j++) {
+					if(my_map[i][j] != map[i][j]) {
+						answer.add((i*10+((j+1)/2)+1));
+//						System.out.print((i*10+((j+1)/2)+1) + "번 / ");
+						c = 1;
+						p++;
+						pall++;
+					}
 				}
+				
+			}
+			System.out.println(k+"과목 평균> "+(100-(p*5))+"점");
+			System.out.print("오답:");
+			for(int a: answer) {
+				System.out.print(a+"번 ");
 			}
 			System.out.println();
-		}//for
+			System.out.println();
+		}
 		
 		if(c==0) {
 			System.out.println("백점!");
 			System.exit(0);
 		}
-	
-		int p = 0;
-		int pall=0;
-		for(int i = 0; i<2; i++) {
-			for(int j = 0; j<19; j++) {
-				if(my_map[i][j] != map[i][j]) {
-					p++;
-					pall++;
-				}
-			}
-		}
-		System.out.println();
-		System.out.println("1과목 평균> "+(100-(p*5))+"점");
-		p=0;
-		for(int i = 2; i<4; i++) {
-			for(int j = 0; j<19; j++) {
-				if(my_map[i][j] != map[i][j]) {  
-					p++;
-					pall++;
-				}
-			}
-		}
-		System.out.println("2과목 평균> "+(100-(p*5))+"점");
-		p=0;
-		for(int i = 4; i<6; i++) {
-			for(int j = 0; j<19; j++) {
-				if(my_map[i][j] != map[i][j]) {  
-					p++;
-					pall++;
-				}
-			}
-		}
-		System.out.println("3과목 평균> "+(100-(p*5))+"점");
-		p=0;
-		for(int i = 6; i<8; i++) {
-			for(int j = 0; j<19; j++) {
-				if(my_map[i][j] != map[i][j]) {  
-					p++;
-					pall++;
-				}
-			}
-		}
-		System.out.println("4과목 평균> "+(100-(p*5))+"점");
-		p=0;
-		for(int i = 8; i<10; i++) {
-			for(int j = 0; j<19; j++) {
-				if(my_map[i][j] != map[i][j]) {  
-					p++;
-					pall++;
-				}
-			}
-		}
-		System.out.println("5과목 평균> "+(100-(p*5))+"점");
+
 		System.out.println("전체 평균>"+(100-pall)+"점");
 	}
 
