@@ -3,8 +3,10 @@ package codingTest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -32,12 +34,96 @@ import java.util.StringTokenizer;
 //11000111
 //예제 출력 1 
 //2
+
+//1. map입력 배열 0은 지나갈수 있는 흰색, 1은 검정색으로 입력. (문제랑 반대)0이면 continue할 예정.
+//2. 블랙 개수에 따라 나누어주고 나머지는 0으로 이루어져있는 arr배열. 1번째 블럭뭉탱이는 전부 1로만, 2번째 하얀 블럭들은 모두 2로만 ....마지막 블럭까지 이루어져있음.
+//3. 최단거리들을 넣을 배열 갱신 answer_list. 배열의 크기는visited에서 구함.
+//4. 최종적으로 answer_list의 마지막 값이 답
+class bfs_xy{
+	int y;
+	int x;
+	public bfs_xy(int y, int x) {
+		this.y = y;
+		this.x = x;
+	}
+}
+
 public class codingTest4 {
-//	static int[] dx = {0,0,1,-1};
-//	static int[] dy = {-1,1,0,0};
+	static int[] dx = {0,0,1,-1};
+	static int[] dy = {-1,1,0,0};
+	static int n;
+	static int[] answer_list;
+	static int[][] map,arr;
+	static boolean[][] visited;
+	
+	private static void arr_bfs(int y, int x, int c) {
+		Queue<bfs_xy> q = new LinkedList<bfs_xy>();
+		q.add(new bfs_xy(y, x));
+		visited[y][x] = true;
+		arr[y][x] = c;
+		while (!q.isEmpty()) {
+			bfs_xy qp = q.poll();
+			int yq = qp.y;
+			int xq = qp.x;
+			for(int i = 0; i<4; i++) {
+				int ny = yq + dy[i];
+				int nx = xq + dx[i];
+				
+				if(ny<0 || nx<0 || ny>= n || nx >= n || visited[ny][nx]) continue;
+				
+				if(map[ny][nx]==0) {//0이 지나갈 수 있는 흰색 벽
+					arr[ny][nx] = arr[y][x];
+					visited[ny][nx] = true;
+					q.add(new bfs_xy(ny, nx));
+				}
+			}//for
+		}
+	}
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String dirs = br.readLine();
+		n = Integer.parseInt(br.readLine());
+		map = new int[n][n];
+		arr = new int[n][n];
+		//1.
+		for(int i = 0; i<n; i++) {
+			String s = br.readLine();
+			for(int j = 0; j<n; j++) {
+				char s_one = s.charAt(j);
+				if(s_one=='1') {
+					map[i][j] = 0;
+				}
+				else {
+					map[i][j] = 1;
+				}
+			}//for
+		}//for
+		
+//		arr 갱신
+		visited = new boolean[n][n];
+		int c = 0;
+		for(int i = 0; i<n; i++) {
+			for(int j = 0; j<n; j++) {
+				if(!visited[i][j] && map[i][j]==0){
+					c++;
+					arr_bfs(i, j, c);
+				}
+			}
+		}
+		
+		for(int i = 0; i<n; i++) {
+			for(int j = 0; j<n; j++) {
+				System.out.print(map[i][j]);
+			}
+			System.out.println();
+		}
+		System.out.println();
+		for(int i = 0; i<n; i++) {
+			for(int j = 0; j<n; j++) {
+				System.out.print(arr[i][j]);
+			}
+			System.out.println();
+		}
+		
 	}
 }
