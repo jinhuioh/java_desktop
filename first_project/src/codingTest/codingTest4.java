@@ -35,14 +35,10 @@ import java.util.StringTokenizer;
 //예제 출력 1 
 //2
 
-//1. map입력 배열 0은 지나갈수 있는 흰색, 1은 검정색으로 입력. (문제랑 반대)0이면 continue할 예정.
-//2. 블랙 개수에 따라 나누어주고 나머지는 0으로 이루어져있는 arr배열. 1번째 블럭뭉탱이는 전부 1로만, 2번째 하얀 블럭들은 모두 2로만 ....마지막 블럭까지 이루어져있음.
-//3. 최단거리들을 넣을 배열 갱신 answer_list. 배열의 크기는visited에서 구함.
-//4. 최종적으로 answer_list의 마지막 값이 답
-class bfs_xy{
+class node{
 	int y;
 	int x;
-	public bfs_xy(int y, int x) {
+	public node(int y, int x) {
 		this.y = y;
 		this.x = x;
 	}
@@ -53,77 +49,68 @@ public class codingTest4 {
 	static int[] dy = {-1,1,0,0};
 	static int n;
 	static int[] answer_list;
-	static int[][] map,arr;
-	static boolean[][] visited;
-	
-	private static void arr_bfs(int y, int x, int c) {
-		Queue<bfs_xy> q = new LinkedList<bfs_xy>();
-		q.add(new bfs_xy(y, x));
-		visited[y][x] = true;
-		arr[y][x] = c;
+	static int[][] visited;
+	static char[][] map;
+	static Queue<node> q;
+
+	private static void bfs() {
 		while (!q.isEmpty()) {
-			bfs_xy qp = q.poll();
-			int yq = qp.y;
-			int xq = qp.x;
+			node qp = q.poll();
 			for(int i = 0; i<4; i++) {
-				int ny = yq + dy[i];
-				int nx = xq + dx[i];
+				int ny = qp.y + dy[i];
+				int nx = qp.x + dx[i];
 				
-				if(ny<0 || nx<0 || ny>= n || nx >= n || visited[ny][nx]) continue;
+				if(ny < 0 || nx < 0 || ny>= n || nx >= n) continue;
 				
-				if(map[ny][nx]==0) {//0이 지나갈 수 있는 흰색 벽
-					arr[ny][nx] = arr[y][x];
-					visited[ny][nx] = true;
-					q.add(new bfs_xy(ny, nx));
-				}
+				//흰 방
+				if(map[ny][nx]=='1') {
+					if(visited[ny][nx] > visited[qp.y][qp.x]) {
+						visited[ny][nx] = visited[qp.y][qp.x];
+						q.add(new node(ny, nx));
+					}//if
+				}//if
+				
+				//검은 방
+				else {
+					if(visited[ny][nx] > visited[qp.y][qp.x]+1) {
+						visited[ny][nx] = visited[qp.y][qp.x]+1;
+						q.add(new node(ny, nx));
+					}//if
+				}//else
 			}//for
-		}
+			for(int i = 0; i<n; i++) {
+				for(int j = 0; j<n; j++) {
+					System.out.print(visited[i][j]);
+				}
+				System.out.println();
+			}
+			System.out.println();
+		}//while
 	}
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		map = new int[n][n];
-		arr = new int[n][n];
-		//1.
+		map = new char[n][n];
+		visited = new int[n][n];
+		q = new LinkedList<node>();
 		for(int i = 0; i<n; i++) {
-			String s = br.readLine();
-			for(int j = 0; j<n; j++) {
-				char s_one = s.charAt(j);
-				if(s_one=='1') {
-					map[i][j] = 0;
-				}
-				else {
-					map[i][j] = 1;
-				}
-			}//for
+			map[i] = br.readLine().toCharArray();//문자열 입력받고 한글자씩 저장하기
+			Arrays.fill(visited[i], Integer.MAX_VALUE);
 		}//for
 		
-//		arr 갱신
-		visited = new boolean[n][n];
-		int c = 0;
-		for(int i = 0; i<n; i++) {
-			for(int j = 0; j<n; j++) {
-				if(!visited[i][j] && map[i][j]==0){
-					c++;
-					arr_bfs(i, j, c);
-				}
-			}
-		}
+		q.add(new node(0, 0));
+		visited[0][0] = 0;
+		
+		bfs();
+		
 		
 		for(int i = 0; i<n; i++) {
 			for(int j = 0; j<n; j++) {
-				System.out.print(map[i][j]);
+				System.out.print(visited[i][j]);
 			}
 			System.out.println();
 		}
-		System.out.println();
-		for(int i = 0; i<n; i++) {
-			for(int j = 0; j<n; j++) {
-				System.out.print(arr[i][j]);
-			}
-			System.out.println();
-		}
-		
+		System.out.println(visited[n-1][n-1]);
 	}
 }
