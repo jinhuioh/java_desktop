@@ -104,13 +104,6 @@ public class codingTest4 {
 		
 		bfs();
 		
-		
-		for(int i = 0; i<n; i++) {
-			for(int j = 0; j<n; j++) {
-				System.out.print(visited[i][j]);
-			}
-			System.out.println();
-		}
 		System.out.println(visited[n-1][n-1]);
 	}
 }
