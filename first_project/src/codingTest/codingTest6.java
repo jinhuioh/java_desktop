@@ -27,7 +27,7 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 //출력
 //첫째 줄에 얻을 수 있는 안전 영역의 최대 크기를 출력한다.
 
-//2를 중심으로 상하좌우로 0 의 개수를 세서 0의 개수가 많은 2를 중심으로 벽을 세운다.
+//벽을 차례대로세우면서 최대 안전지역을 구하자..
 
 public class codingTest6 {
 	    static final int dx[] = {0,0,1,-1};  //상하좌우 방향 설정
@@ -66,9 +66,9 @@ public class codingTest6 {
 		        for(int i=0; i<n; i++) {
 		            for(int j=0; j<m; j++) {
 		                if(originalMap[i][j] == 0) {
-		                    originalMap[i][j] = 1;
+		                    originalMap[i][j] = 1;//벽세우기
 		                    dfs(wallCnt+1);
-		                    originalMap[i][j] = 0;
+		                    originalMap[i][j] = 0;//원래대로 돌려놓기 즉,벽 허물기.
 		                }
 		            }
 		        }
