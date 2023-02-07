@@ -67,7 +67,7 @@ public class codingTest6 {
 		            for(int j=0; j<m; j++) {
 		                if(originalMap[i][j] == 0) {
 		                    originalMap[i][j] = 1;//벽세우기
-		                    dfs(wallCnt+1);
+		                    dfs(wallCnt+1);//벽 세우고 다시 dfs함수에 적용//즉 wallCnt==3이기 전까지는 계속 벽 세우고 originalMap[i][j] = 0;는 실행 안됨.(재귀).
 		                    originalMap[i][j] = 0;//원래대로 돌려놓기 즉,벽 허물기.
 		                }
 		            }
