@@ -23,20 +23,11 @@ import java.util.*;
 //예제 출력 1 
 //2
 //7
-class node {
-	int y;
-	int x;
-	node(int y, int x){
-		this.y = y;
-		this.x = x;
-	}
-}
+
 public class codingTest3 {
 	static int n,m;
-	static char[][] map;
-	static Queue<node> q;
-	
-
+	static int[][] map;
+	static int Max = 987654321;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -44,14 +35,41 @@ public class codingTest3 {
 		m = Integer.parseInt(st.nextToken());//알고싶은 노드 쌍의 거리
 		
 		//map 입력받기
-		map = new char[n+1][n+1];
-		for(int i = 0; i<n; i++) {
-			StringTokenizer st1 = new StringTokenizer(br.readLine());
-			for(int j = 0; j<m; j++) {
-			}//for
+		map = new int[n+1][n+1];
+		
+		for(int i = 1; i<=n; i++) {
+			for(int j = 1; j<=n; j++) {
+				map[i][j] = Max;
+				if(i==j) map[i][j]=0;
+			}
+		}
+		
+		for(int i = 0; i<n-1; i++) {
+			st = new StringTokenizer(br.readLine());
+			int y = Integer.parseInt(st.nextToken());
+			int x = Integer.parseInt(st.nextToken());
+			int k = Integer.parseInt(st.nextToken());//두 노드 사이의 거리
+			map[y][x] = k;
+			map[x][y] = k;
 		}//for
 		
-	
+		for(int p=1; p<=n; p++) {
+			for(int i=1; i<=n; i++) {
+				for(int j=1; j<=n; j++) {
+					if(map[i][j] > map[p][j] + map[i][p]) {
+						map[i][j] = map[p][j] + map[i][p];
+					}
+				}
+			}
+		}
+		//		거리를 알고 싶은 M개의 노드 쌍
+		for(int j=0; j<m; j++) {
+			st =  new StringTokenizer(br.readLine());
+			int start_node = Integer.parseInt(st.nextToken());
+			int end_node = Integer.parseInt(st.nextToken());
+			System.out.println(map[start_node][end_node]);
+		}//for
+		
     }
 }
 
