@@ -3,74 +3,83 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-//노드사이의 거리
-//문제
-//N(2≤N≤1,000)개의 노드로 이루어진 트리가 주어지고 M(M≤1,000)개의 두 노드 쌍을 입력받을 때 두 노드 사이의 거리를 출력하라.
+//문제: 물통
+//각각 부피가 A, B, C(1≤A, B, C≤200) 리터인 세 개의 물통이 있다. 처음에는 앞의 두 물통은 비어 있고, 세 번째 물통은 가득(C 리터) 차 있다. 이제 어떤 물통에 들어있는 물을 다른 물통으로 쏟아 부을 수 있는데, 이때에는 한 물통이 비거나, 다른 한 물통이 가득 찰 때까지 물을 부을 수 있다. 이 과정에서 손실되는 물은 없다고 가정한다.
+//
+//이와 같은 과정을 거치다보면 세 번째 물통(용량이 C인)에 담겨있는 물의 양이 변할 수도 있다. 첫 번째 물통(용량이 A인)이 비어 있을 때, 세 번째 물통(용량이 C인)에 담겨있을 수 있는 물의 양을 모두 구해내는 프로그램을 작성하시오.
 //
 //입력
-//첫째 줄에 노드의 개수 N이 입력되고 다음 N-1개의 줄에 트리 상에 연결된 두 점과 거리(10,000 이하의 정수)를 입력받는다. 그 다음 줄에는 거리를 알고 싶은 M개의 노드 쌍이 한 줄에 한 쌍씩 입력된다.
+//첫째 줄에 세 정수 A, B, C가 주어진다.
 //
 //출력
-//M개의 줄에 차례대로 입력받은 두 노드 사이의 거리를 출력한다.
+//첫째 줄에 공백으로 구분하여 답을 출력한다. 각 용량은 오름차순으로 정렬한다.
 //
 //예제 입력 1 
-//4 2
-//2 1 2
-//4 3 2
-//1 4 3
-//1 2
-//3 2
+//8 9 10
 //예제 출력 1 
-//2
-//7
+//1 2 8 9 10
 
 public class codingTest3 {
-	static int n,m;
-	static int[][] map;
-	static int Max = 987654321;
-	public static void main(String[] args) throws IOException {
+
+	static int[] limit;
+	static boolean[][] check;
+	static Set<Integer> answer;
+	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());//트리 상 연결된 두 점과 거리
-		m = Integer.parseInt(st.nextToken());//알고싶은 노드 쌍의 거리
+		StringTokenizer st= new StringTokenizer(br.readLine());
 		
-		//map 입력받기
-		map = new int[n+1][n+1];
-		
-		for(int i = 1; i<=n; i++) {
-			for(int j = 1; j<=n; j++) {
-				map[i][j] = Max;
-				if(i==j) map[i][j]=0;
-			}
+		limit = new int[3];
+		check = new boolean[201][201];
+		for(int i=0; i<3; i++) {
+			limit[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		for(int i = 0; i<n-1; i++) {
-			st = new StringTokenizer(br.readLine());
-			int y = Integer.parseInt(st.nextToken());
-			int x = Integer.parseInt(st.nextToken());
-			int k = Integer.parseInt(st.nextToken());//두 노드 사이의 거리
-			map[y][x] = k;
-			map[x][y] = k;
-		}//for
+		answer = new TreeSet<>();
+		dfs(0,0, limit[2]);
 		
-		for(int p=1; p<=n; p++) {
-			for(int i=1; i<=n; i++) {
-				for(int j=1; j<=n; j++) {
-					if(map[i][j] > map[p][j] + map[i][p]) {
-						map[i][j] = map[p][j] + map[i][p];
-					}
-				}
-			}
+		for(int num : answer) {
+			System.out.print(num+" ");
 		}
-		//		거리를 알고 싶은 M개의 노드 쌍
-		for(int j=0; j<m; j++) {
-			st =  new StringTokenizer(br.readLine());
-			int start_node = Integer.parseInt(st.nextToken());
-			int end_node = Integer.parseInt(st.nextToken());
-			System.out.println(map[start_node][end_node]);
-		}//for
+	}
+	static void dfs(int a, int b, int c){
+		if(check[a][b]) return;
 		
-    }
+		if(a==0) {
+			answer.add(c);
+		}
+		check[a][b] = true;
+		// 0 -> 1
+		if(a+b > limit[1]) {
+			dfs((a+b)-limit[1], limit[1], c);
+		}else {
+			dfs(0, a+b, c);
+		}
+		
+		// 1 -> 0
+		if(a+b > limit[0]) {
+			dfs(limit[0], a+b-limit[0], c);
+		}else {
+			dfs(a+b, 0, c);
+		}
+		
+		// 2 -> 0
+		if(a+c > limit[0]) {
+			dfs(limit[0], b, a+c-limit[0]);
+		}else {
+			dfs(a+c, b, 0);
+		}
+		
+		
+		// 2 -> 1
+		if(b+c > limit[1]) 	{
+			dfs(a, limit[1], b+c-limit[1]);
+		}else {
+			dfs(a, b+c, 0);
+		}
+		
+		// 0 -> 2
+		dfs(a, 0, b+c);
+		// 1 -> 2
+		dfs(0, b, a+c);
+	}
 }
-
-
