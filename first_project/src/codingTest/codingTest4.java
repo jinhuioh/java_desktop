@@ -9,273 +9,110 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
-
-//탈출
-//문제
-//사악한 암흑의 군주 이민혁은 드디어 마법 구슬을 손에 넣었고, 그 능력을 실험해보기 위해 근처의 티떱숲에 홍수를 일으키려고 한다. 이 숲에는 고슴도치가 한 마리 살고 있다. 고슴도치는 제일 친한 친구인 비버의 굴로 가능한 빨리 도망가 홍수를 피하려고 한다.
+//입력 : 숨바꼭질
+//재서기는 수혀니와 교외 농장에서 숨바꼭질을 하고 있다. 농장에는 헛간이 많이 널려있고 재서기는 그 중에 하나에 숨어야 한다.
+//헛간의 개수는 N(2 <= N <= 20,000)개이며, 1 부터 샌다고 하자.  
 //
-//티떱숲의 지도는 R행 C열로 이루어져 있다. 비어있는 곳은 '.'로 표시되어 있고, 물이 차있는 지역은 '*', 돌은 'X'로 표시되어 있다. 비버의 굴은 'D'로, 고슴도치의 위치는 'S'로 나타내어져 있다.
+//재서기는 수혀니가 1번 헛간부터 찾을 것을 알고 있다. 모든 헛간은 M(1<= M <= 50,000)개의 양방향 길로 이어져 있고, 
+//그 양 끝을 A_i 와 B_i(1<= A_i <= N; 1 <= B_i <= N; A_i != B_i)로 나타낸다. 
+//또한 어떤 헛간에서 다른 헛간으로는 언제나 도달 가능하다고 생각해도 좋다. 
 //
-//매 분마다 고슴도치는 현재 있는 칸과 인접한 네 칸 중 하나로 이동할 수 있다. (위, 아래, 오른쪽, 왼쪽) 물도 매 분마다 비어있는 칸으로 확장한다. 물이 있는 칸과 인접해있는 비어있는 칸(적어도 한 변을 공유)은 물이 차게 된다. 물과 고슴도치는 돌을 통과할 수 없다. 또, 고슴도치는 물로 차있는 구역으로 이동할 수 없고, 물도 비버의 소굴로 이동할 수 없다.
+//재서기는 발냄새가 지독하기 때문에 최대한 냄새가 안나게 숨을 장소를 찾고자 한다. 
+//냄새는 1번 헛간에서의 거리(여기서 거리라 함은 지나야 하는 길의 최소 개수이다)가 멀어질수록 감소한다고 한다. 재서기의 발냄새를 최대한 숨길 수 있는 헛간을 찾을 수 있게 도와주자!
+//첫 번째 줄에는 N과 M이 공백을 사이에 두고 주어진다.
 //
-//티떱숲의 지도가 주어졌을 때, 고슴도치가 안전하게 비버의 굴로 이동하기 위해 필요한 최소 시간을 구하는 프로그램을 작성하시오.
+//이후 M줄에 걸쳐서 A_i와 B_i가 공백을 사이에 두고 주어진다.
 //
-//고슴도치는 물이 찰 예정인 칸으로 이동할 수 없다. 즉, 다음 시간에 물이 찰 예정인 칸으로 고슴도치는 이동할 수 없다. 이동할 수 있으면 고슴도치가 물에 빠지기 때문이다. 
-//
-//입력
-//첫째 줄에 50보다 작거나 같은 자연수 R과 C가 주어진다.
-//
-//다음 R개 줄에는 티떱숲의 지도가 주어지며, 문제에서 설명한 문자만 주어진다. 'D'와 'S'는 하나씩만 주어진다.
+// 
 //
 //출력
-//첫째 줄에 고슴도치가 비버의 굴로 이동할 수 있는 가장 빠른 시간을 출력한다. 만약, 안전하게 비버의 굴로 이동할 수 없다면, "KAKTUS"를 출력한다.
+//출력은 한줄로 이루어지며, 세 개의 값을 공백으로 구분지어 출력해야한다. 
+//
+//첫 번째는 숨어야 하는 헛간 번호를(만약 거리가 같은 헛간이 여러개면 가장 작은 헛간 번호를 출력한다), 두 번째는 그 헛간까지의 거리를, 세 번째는 그 헛간과 같은 거리를 갖는 헛간의 개수를 출력해야한다.
 //
 //예제 입력 1 
-
-// 일단 물 증가시키고 다음에 s이동시킴 s가 d로 갈 수 있으면 최종적으로 answer출력 해당 과정 돌때마다 시간(answer) 증가/
-// x는 돌, 별은 물.
-
-//3 3
-//D.*
-//...
-//.S.
+//6 7
+//3 6
+//4 3
+//3 2
+//1 3
+//1 2
+//2 4
+//5 2
 //예제 출력 1 
-//3
+//4 2 3
 
-//왜 메모리 초과가 뜨는것인가..!!!!!
-//class node{
-//	int y;
-//	int x;
-//	public node(int y, int x) {
-//		this.y = y;
-//		this.x = x;
-//	}
-//}
-//
-//public class codingTest4 {
-//	static int[] dx = {0,0,1,-1};
-//	static int[] dy = {-1,1,0,0};
-//	static int n,m;
-//	static char[][] map;
-//	static Queue<node> q_s, q_water;
-//
-//	//물 증가 함수
-//	private static void water_bfs(Queue<node> q_water) {
-//		Queue<node> q = new LinkedList<node>();//q에 물로 바뀐 부분을 넣어서 while문이 끝난 후 q_water에 넣어준다.
-//		while (!q_water.isEmpty()) {
-//			node qp = q_water.poll();
-//			System.out.println("water qp while>> "+q_water);
-//			int y = qp.y;
-//			int x = qp.x;
-////			System.out.println(y+" "+x);
-//			for(int i = 0; i<4; i++) {
-//				int ny = y + dy[i];
-//				int nx = x + dx[i];
-//				
-//				if(ny>=0 && nx>=0 && ny<n && nx<m && map[ny][nx] !='D' && map[ny][nx] !='X') {
-//					map[ny][nx] = '*';
-//					q.add(new node(ny, nx));
-//				}//if
-//			}//for
-//		}//while
-////		q_water = new LinkedList<node>();
-//		//q_water갱신
-////		System.out.println("qwater 갱신하기 전 상태1!>>"+q_water);
-//		q_water = new LinkedList<node>();
-//		while (!q.isEmpty()) {
-//			node qp1 = q.poll();
-//			q_water.add(new node(qp1.y, qp1.x));
-//		}
-////		System.out.println("qwater>>"+q_water);
-//	}
-//	
-//	private static int s_bfs(Queue<node> q_s) {
-//		int answer = 0;
-//		Queue<node> q = new LinkedList<node>();
-//		
-//		while (!q_s.isEmpty()) {
-//			node qp = q_s.poll();
-//			int y = qp.y;
-//			int x = qp.x;
-//			//만약 해당 위치가 *이면 continue 이동했지만 이미 물에 잠긴 것이므로.
-//			if(map[y][x]=='*') {
-//				continue;
-//			}
-//			
-//			for(int i = 0; i<4; i++) {
-//				int ny = y + dy[i];
-//				int nx = x + dx[i];
-//				
-//				if(ny>=0 && nx>=0 && ny<n && nx<m && map[ny][nx] !='*' && map[ny][nx] !='X') {
-//					if(map[ny][nx] =='D') {
-//						answer = 1;
-//					}
-//					map[ny][nx] = 'S';
-//					q.add(new node(ny, nx));
-//				}//if
-//			}//for
-//		}
-////		q_s = new LinkedList<node>();
-//		//고슴도치 위치 갱신
-//		while (!q.isEmpty()) {
-//			node qp1 = q.poll();
-//			q_s.add(new node(qp1.y, qp1.x));
-//		}
-//		return answer;
-//	}
-//	
-//	public static void main(String[] args) throws NumberFormatException, IOException {
-//		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//		StringTokenizer st = new StringTokenizer(br.readLine());
-//		n = Integer.parseInt(st.nextToken());
-//		m = Integer.parseInt(st.nextToken());
-//		
-//		map = new char[n][m];
-//		q_s = new LinkedList<node>();
-//		q_water = new LinkedList<node>();
-//		
-////		map 입력받기
-//		for(int i=0; i<n; i++) {
-//			String s = br.readLine();
-//			for(int j=0; j<m; j++) {
-//				char s_char = s.charAt(j);
-//				if(s_char=='S') {
-//					q_s.add(new node(i, j));
-//				}
-//				if(s_char=='*') {
-//					q_water.add(new node(i, j));
-//				}
-//				map[i][j] = s.charAt(j);
-//			}
-//		}//for
-//		
-//		int time = 0;
-//		int s_node = 0;
-//		Loop :
-//		for(int i=0; i<n; i++) {
-//			for(int j=0; j<m; j++) {
-//			
-//	//		s의 위치와 d의 위치가 같기 전까지 while문 들리기 //s_bfs의 리턴값이 1이면 s의 위치와 d의 위치가 같은것으로 판단하고 while문 종료
-//				if(s_node==1) {
-//					System.out.println(time);
-//					break Loop;
-//				}//if
-//				time++;
-//				//고슴도치 이동 함수//이동할 수 있는 곳은 전부 S로 갱신.
-//				s_node = s_bfs(q_s);
-//				//물증가 시키는 함수
-//				water_bfs(q_water);
-//				//만약 q들이 비어있으면 KAKTUS출력//여기왜 오류나는지 찾아보기!!!!
-//	//			if(q_s.isEmpty() && q_water.isEmpty()) {
-//	//				System.out.println("KAKTUS");
-//	//				System.exit(0);
-//	//			}
-//	//			
-////				for(int i=0; i<n; i++) {
-////					for(int j=0; j<m; j++) {
-////						System.out.print(map[i][j]);
-////					}
-////					System.out.println();
-////				}
-////				System.out.println();
-//			}//for
-//		}//for
-//		if(s_node==0) {
-//			System.out.println("KAKTUS");
-//		}
-//	}
-//}
+class node{
+	int y;
+	int x;
+	node(int y, int x){
+		this.y = y;
+		this.x = x;
+	}
+}
 
 public class codingTest4 {
-
-static int R, C;
-static Character map[][];
-static int[] dx = {-1, 1, 0, 0};
-static int[] dy = {0, 0, -1, 1};
-static Queue<int[]> sq = new LinkedList<int[]>();	//고슴도치 전용큐
-static Queue<int[]> wq = new LinkedList<int[]>();	//물 전용큐
-static int answer = Integer.MAX_VALUE;
-
-
-public static void main(String[] args) throws IOException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    StringTokenizer st;
-    st = new StringTokenizer( br.readLine() );
-    R = Integer.parseInt( st.nextToken() );
-    C = Integer.parseInt( st.nextToken() );
-
-    //*: 물 / .: 비어있음 / X: 돌
-    map = new Character[R][C];
-
-    for( int i=0; i<R; i++ ) {
-        String str = br.readLine();
-        for( int j=0; j<C; j++ ) {
-            map[i][j] = str.charAt(j);
-
-            //BFS를 이용하므로 S 혹은 *이 나오면
-            //바로 각 큐에 넣어준다.
-            if( map[i][j] == 'S' )
-                sq.add( new int[] {i, j, 0} );
-            else if( map[i][j] == '*' )
-                wq.add( new int[] {i, j} );
-        }
-    }
-
-    BFS();
-
-    System.out.println( answer==Integer.MAX_VALUE ? "KAKTUS" : answer );//고슴도치가 D위치와 같아야함 answer값이 갱신이 됨.
-}
-
-public static void BFS() {
-
-    while( !sq.isEmpty() ) {//고슴도치 큐가 비어있기 전까지 실행
-        //먼저 물을 이동시킨다.
-    	int w_len = wq.size();
-        for( int i=0; i<w_len; i++ ) {
-            int[] cur_w = wq.poll();
-
-            for( int j=0; j<4; j++ ) {
-                int nx = cur_w[0] + dx[j];
-                int ny = cur_w[1] + dy[j];
-
-                //물의 새로운 좌표가 map범위 안에 있고, 새로운 좌표로 이동할 수 있으면
-                if( nx>=0 && nx<R && ny>=0 && ny<C && map[nx][ny]=='.' ) {
-                    //물의 새로운 좌표를 물로 채운다.
-                    map[nx][ny] = '*';
-
-                    //물의 새로운 좌표를 물큐에 넣어준다.
-                    wq.add( new int[] { nx, ny } );
-                }
-            }
-        }
-
-        //물 이동시켰으므로 다음으로 고슴도치 이동시킨다.
-        int s_len = sq.size();
-        for( int i=0; i<s_len; i++ ) {
-            int[] cur_s = sq.poll();
-
-            for( int j=0; j<4; j++ ) {
-                int nx = cur_s[0] + dx[j];
-                int ny = cur_s[1] + dy[j];
-                int time = cur_s[2];
-
-                //고슴도치 새로운 좌표가 map범위 안에 있다면
-                if( nx>=0 && nx<R && ny>=0 && ny<C ) {
-                    //고슴도치 새 좌표가 비버굴에 도착했으면 종료
-                    if( map[nx][ny] == 'D' ) {
-                        answer = Math.min( answer, time+1 );
-                        return;
-                    }
-                    //고슴도치 새 좌표가 갈 수 있는 공간이면
-                    else if( map[nx][ny] == '.' ) {
-                        map[nx][ny] = 'S';
-                        sq.add( new int[] { nx, ny, time+1 } );
-                    }
-                }
-            }
-        }
-    }//while
-
-
-}
+	static List<List<Integer>> node_list;
+	static boolean[] visited;
+	static int n,m;
+	static int[] maxIdx = new int[3];
+	static Queue<node> q = new LinkedList<node>();
+	
+	private static void bfs() {
+		
+	}
+	
+	public static void main(String[] args) throws IOException {
+	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	    StringTokenizer st = new StringTokenizer(br.readLine());
+	    StringBuilder sb = new StringBuilder();
+	    n = Integer.parseInt(st.nextToken());
+	    m = Integer.parseInt(st.nextToken());
+	    
+	    node_list = new ArrayList<>();
+	    visited = new boolean[n+1];
+	    
+	    for(int i=0; i<n+1; i++) {
+	    	node_list.add(new ArrayList<Integer>());
+	    }//for
+	    
+	    for(int i = 0; i<m; i++) {
+	    	st = new StringTokenizer(br.readLine());
+	    	int y = Integer.parseInt(st.nextToken());
+	    	int x = Integer.parseInt(st.nextToken());
+	    	node_list.get(y).add(x);
+	    	node_list.get(x).add(y);
+	    }//for
+	    
+	    q.add(new node(1, 0));
+	    visited[1] = true;
+	    
+	    while (!q.isEmpty()) {
+			node now = q.poll();
+			
+			//최대거리 계산
+			if(now.x > maxIdx[1]) {//1부터의 거리가 이전 노드 번호의 1부터의 거리보다 크다면 갱신!!
+				maxIdx[0] = now.y;//노드 번호
+				maxIdx[1] = now.x;//1부터의 거리
+				maxIdx[2] = 1;//최대 거리 카운트 개수
+			}
+			else if(now.x == maxIdx[1]) {//1부터의 거리가 이전 노드 번호의 1부터의 거리와 같다면
+				maxIdx[2]++;//최대거리 카운트 개수 증가!!
+				maxIdx[0] = Math.min(maxIdx[0], now.y);//노드 번호는 최소값으로 바꿈
+			}
+			for(int k : node_list.get(now.y)) {//방문표시
+				if(visited[k]) {
+					continue;
+				}
+				visited[k] = true;
+				q.add(new node(k, now.x+1));//큐에 값 넣어서 다음 노드로 이동.
+			}
+		}//while
+	    
+	    for(int idx : maxIdx) {
+	    	sb.append(idx).append(" ");
+	    }
+	    System.out.println(sb);
+	    //다음 노드 탐색
+	}
 }
