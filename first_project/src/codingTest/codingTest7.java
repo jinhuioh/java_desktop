@@ -11,100 +11,108 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.StringTokenizer;
-//문제
-//동규와 주미는 일직선 상의 돌 다리 위에있다. 돌의 번호는 0 부터 100,000 까지 존재하고 동규는 
-//\(N\)번 돌 위에, 주미는 
-//\(M\)번 돌 위에 위치하고 있다. 동규는 주미가 너무 보고싶기 때문에 최대한 빨리 주미에게 가기 위해 
-//\(A, B\) 만큼의 힘을 가진 스카이 콩콩을 가져왔다. 동규가 정한 다리를 건너는 규칙은 턴 방식인데, 한 턴에 이동할 수 있는 거리는 이러하다. 현 위치에서 +1칸, -1칸을 이동할 수 있고, 스카이 콩콩을 이용해 현 위치에서 
-//\(A\)나 
-//\(B\)만큼 좌우로 점프할 수 있으며, 순간적으로 힘을 모아 현 위치의 
-//\(A\)배나 
-//\(B\)배의 위치로 이동을 할 수 있다. 예를 들어 지금 동규가 7번 돌 위에 있고 스카이 콩콩의 힘이 8이면 그냥 점프를 해서 15번 돌에 갈 수도 있고, 순간적으로 힘을 모아 56번 돌에 갈 수도 있다는 것이다. 주어진 8가지의 방법 중 적절한 방법을 골라서 최대한 빨리 동규가 주미를 만날 수 있게 도와주자. 단, 이동 과정에서 100,000보다 크거나 0보다 작은 번호의 돌은 존재하지 않으므로 갈 수 없고, 같은 방법을 계속 사용해도 되며 항상 도달할 수 있는 케이스만 주어진다.
+//문제:얼음깨기
+//도도는 심심해서 보드게임 카페에 갔다. 마침 평소에 즐겨 했던 얼음 깨기 펭귄의 업그레이드 버전으로 특수 얼음 깨기 펭귄 보드게임이 나와 직접 플레이해 보기로 결정했다. 특수 얼음 깨기 펭귄 게임은 특수 안경이 있어 특수 안경을 끼고 얼음들을 보면 얼음들 간의 연결 관계가 보인다.
 //
-//입력
-//입력의 첫 줄에 스카이 콩콩의 힘 
-//\(A\)와 
-//\(B\), 그리고 동규의 현재위치 
-//\(N\), 주미의 현재 위치 
-//\(M\)이 주어진다. (단, 
-//\(2 \le A, B \le 30\) 이고  
-//\(0 \le N, M \le 100,000\))
+//특수 얼음 깨기 펭귄 게임에 있는 얼음의 종류로는 지지대의 역할을 하는 얼음과 일반 얼음 총 2가지의 얼음이 존재한다. 지지대의 역할을 하는 얼음의 경우,
+//빨간색으로 구분하여 볼 수 있으며 일반 얼음을 지탱해 주어 일반 얼음들이 깨지지 않도록 도와준다.
+//일반 얼음의 경우에는 1개의 지지대만이 연결되어 있어도 얼음이 깨지지 않지만 펭귄이 올라가 있는 얼음은 2개 이상의 지지대의 역할을 하는 얼음이 연결되어 있어야만 얼음이 깨지지 않는다.
+//이때, 지지대가 연결되어 있다는 것은 지지대로부터 서로 다른 일반 얼음들을 통해 연결 관계가 이어져 있는 것을 이야기한다.
+//특수 얼음 깨기 펭귄 게임에서 도도가 펭귄을 떨어뜨리지 않고 최대 몇 개의 얼음을 깰 수 있을까?
+//		입력
+//		첫째 줄에 얼음 블록의 개수 
+//		$N$(
+//		$ 3 \leq N \leq 328\,000$)과 지지대의 역할을 하게 되는 얼음의 개수 
+//		$S$(
+//		$ 2 \leq S \leq N-1$), 펭귄이 위치한 얼음 블록의 번호 
+//		$P$(
+//		$ S \lt P \leq N$)가 주어진다. 지지대의 역할을 하게 되는 얼음의 개수가 
+//		$S$일 때, 
+//		$1$번부터 
+//		$S$번까지의 얼음은 지지대의 역할을 한다.
 //
-//출력
-//동규가 주미에게 도달하기 위한 최소한의 이동 횟수를 출력하라.
+//		둘째 줄부터 
+//		$N-1$개의 줄에 두 개의 정수 
+//		$A$, 
+//		$B$가 주어진다. 이는 
+//		$A$번 얼음과 
+//		$B$번 얼음이 연결되어 있음을 의미하며 같은 연결은 여러 번 주어지지 않는다.
 //
-//예제 입력 1 
-//2 3 1 20
-//예제 출력 1 
-//4
-class Point{
-	int x;
-	int y;
-	Point(int x, int y){//돌다리번호와 이동횟수가 들어감.
-		this.x = x;
-		this.y = y;
-	}
-}
+//		게임 시작 시 펭귄은 일반 얼음 위에 위치해 있고 어떤 얼음도 깨지지 않은 상태로 시작하게 된다. 각 얼음들은 
+//		$1$번부터 
+//		$N$번까지 정수 번호로 주어져 있으며 서로 다른 두 얼음을 잇는 경로는 하나뿐이다. 더불어 서로 다른 지지대가 펭귄이 올라가 있는 얼음을 거치지 않고 연결되어 있는 경우는 없다.
+//
+//		출력
+//		플레이어가 펭귄을 떨어트리지 않고 깰 수 있는 얼음의 최대 개수를 구하여라. 지지대의 역할을 하는 얼음 역시 깰 수 있는 얼음에 속한다.
+//
+//		예제 입력 1 
+//		21 6 12
+//		1 9
+//		1 10
+//		10 12
+//		2 13
+//		13 11
+//		11 12
+//		3 8
+//		8 7
+//		8 12
+//		5 19
+//		5 14
+//		14 12
+//		6 20
+//		6 21
+//		20 15
+//		15 12
+//		4 18
+//		4 17
+//		17 16
+//		16 12
+		
 public class codingTest7 {
-	 static int A,B,N,M, result=0;
-	 static boolean visit[] = new boolean[100001];
+	static int n,s,p;//블록,지지대블록,펭귄위치
+	static ArrayList<Integer> list[];
+	static Queue<Integer> q;
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-	        A = Integer.parseInt(st.nextToken());
-	        B = Integer.parseInt(st.nextToken());
-	        N = Integer.parseInt(st.nextToken());
-	        M = Integer.parseInt(st.nextToken());
-	        
-	        bfs();
-	        System.out.println(result);
-	    }
-	    private static void bfs() {
-	        Queue<Point> queue = new LinkedList<Point>();
-	        queue.add(new Point(N,0));
-	        visit[N] = true;
-	        while(!queue.isEmpty()) {
-	            
-	            Point po = queue.poll();
-	            
-	            if(po.x == M) {
-	                result = po.y;//이동 횟수 리턴
-	                return;
-	            }
-	            
-	            if(po.x + 1 < 100001 && !visit[po.x+1]) {
-	                visit[po.x+1] = true;
-	                queue.add(new Point(po.x+1, po.y+1));
-	            }
-	            if(po.x - 1 >= 0 && !visit[po.x-1]) {
-	                visit[po.x-1] = true;
-	                queue.add(new Point(po.x-1, po.y+1));
-	            }
-	            if(po.x + A < 100001 && !visit[po.x+A]) {
-	                visit[po.x+A] = true;
-	                queue.add(new Point(po.x+A, po.y+1));
-	            }
-	            if(po.x - A >= 0 && !visit[po.x-A]) {
-	                visit[po.x-A] = true;
-	                queue.add(new Point(po.x-A, po.y+1));
-	            }
-	            if(po.x + B < 100001 && !visit[po.x+B]) {
-	                visit[po.x+B] = true;
-	                queue.add(new Point(po.x+B, po.y+1));
-	            }
-	            if(po.x - B >= 0 && !visit[po.x-B]) {
-	                visit[po.x-B] = true;
-	                queue.add(new Point(po.x-B, po.y+1));
-	            }
-	            if(po.x * A < 100001 && !visit[po.x*A]) {
-	                visit[po.x*A] = true;
-	                queue.add(new Point(po.x*A, po.y+1));
-	            }
-	            if(po.x * B < 100001 && !visit[po.x*B]) {
-	                visit[po.x*B] = true;
-	                queue.add(new Point(po.x*B, po.y+1));
-	            }
-	        }
-	    }
+		n = Integer.parseInt(st.nextToken());
+		s = Integer.parseInt(st.nextToken());
+		p = Integer.parseInt(st.nextToken());
+		
+		list = new ArrayList[n+1];
+		for(int i = 0; i<n+1; i++) {
+			list[i] = new ArrayList<>();
+		}
+		
+		for(int i = 0; i<n-1; i++) {
+			//연결된 블록들 값 받기
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			list[a].add(b);
+			list[b].add(a);
+		}//for
+		
+		dfs(p, -1, 0);//펭귄의 위치, -1은 의미없는 초기값, 0은 한 칸씩 이동할때 마다 +1할 초기값.
+		answer.sort((o1,o2) -> o1-o2);//o1-o2가 음수면 o1을 더 낮은 인덱스로, 양수면 o2를 더 낮은 인덱스로 지정하는 함수..
+		System.out.println(n-1-answer.get(0)-answer.get(1));
+		}
+	
+	static ArrayList<Integer> answer = new ArrayList<Integer>();
+	static void dfs(int cur, int parent, int cnt) {
+		if(1<= cur && cur<=s) {//현재 위치가 지지대위치와 같다면 answer 리스트에 add(펭귄으로부터 지지대까지의 위치이므로)
+			answer.add(cnt);
+			return;
+		}
+		for(int i = 0; i<list[cur].size(); i++) {
+			int next = list[cur].get(i);//cur에는p가 들어감. 펭귄의 위치와 연결된 i블럭을 next로 지정.
+//			펭귄이 한 칸 움직인 후parent 의 위치와 같지 않다면(당연히 같지 않아야 dfs를 호출하기 때문에 parent=1로 줌.)
+//			두번째 부터는 cur 현재위치와 parent 펭귄의 위치가 같지 않다면 값 증가시켜 다시 dfs호출
+			if(next != parent) {
+				dfs(next, cur, cnt+1);
+			}
+		}
 	}
-	 
+		
+}
+
