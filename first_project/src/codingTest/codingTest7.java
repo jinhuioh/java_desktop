@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -81,38 +82,80 @@ public class codingTest7 {
 		
 		list = new ArrayList[n+1];
 		for(int i = 0; i<n+1; i++) {
-			list[i] = new ArrayList<>();
+			list[i] = new ArrayList<Integer>();
 		}
 		
 		for(int i = 0; i<n-1; i++) {
-			//연결된 블록들 값 받기
 			st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
 			list[a].add(b);
 			list[b].add(a);
-		}//for
-		
-		dfs(p, -1, 0);//펭귄의 위치, -1은 의미없는 초기값, 0은 한 칸씩 이동할때 마다 +1할 초기값.
-		answer.sort((o1,o2) -> o1-o2);//o1-o2가 음수면 o1을 더 낮은 인덱스로, 양수면 o2를 더 낮은 인덱스로 지정하는 함수..
-		System.out.println(n-1-answer.get(0)-answer.get(1));
 		}
-	
-	static ArrayList<Integer> answer = new ArrayList<Integer>();
-	static void dfs(int cur, int parent, int cnt) {
-		if(1<= cur && cur<=s) {//현재 위치가 지지대위치와 같다면 answer 리스트에 add(펭귄으로부터 지지대까지의 위치이므로)
-			answer.add(cnt);
+		//함수실행. 펭귄 위치부터 지지대까지의 거리
+		//매개변수로 다음점(이동점),현재위치,카운트를 준다.
+		dfs(p, -1, 0);
+		Collections.sort(answer);
+		System.out.println(n-answer.get(0)-answer.get(1)-1);
+	}
+	static List<Integer> answer = new ArrayList<Integer>();
+	private static void dfs(int nxt, int cur, int count) {
+		//만약 시작 위치가 s범위 안에 있다면 지지대이므로 answer에 add
+		if(nxt >=1 && nxt<=s) {
+			answer.add(count);
 			return;
 		}
-		for(int i = 0; i<list[cur].size(); i++) {
-			int next = list[cur].get(i);//cur에는p가 들어감. 펭귄의 위치와 연결된 i블럭을 next로 지정.
-//			펭귄이 한 칸 움직인 후parent 의 위치와 같지 않다면(당연히 같지 않아야 dfs를 호출하기 때문에 parent=1로 줌.)
-//			두번째 부터는 cur 현재위치와 parent 펭귄의 위치가 같지 않다면 값 증가시켜 다시 dfs호출
-			if(next != parent) {
-				dfs(next, cur, cnt+1);
+		for(int i = 0; i<list[nxt].size(); i++) {
+			int next = list[nxt].get(i);
+			if(next != cur) {//이동위치가 현재 위치와 다르다면 재귀호출
+				dfs(next, nxt, count+1);
+			
 			}
 		}
 	}
-		
 }
+		
+		
+//		n = Integer.parseInt(st.nextToken());
+//		s = Integer.parseInt(st.nextToken());
+//		p = Integer.parseInt(st.nextToken());
+//		
+//		list = new ArrayList[n+1];
+//		for(int i = 0; i<n+1; i++) {
+//			list[i] = new ArrayList<>();
+//		}
+//		
+//		for(int i = 0; i<n-1; i++) {
+//			//연결된 블록들 값 받기
+//			st = new StringTokenizer(br.readLine());
+//			int a = Integer.parseInt(st.nextToken());
+//			int b = Integer.parseInt(st.nextToken());
+//			list[a].add(b);
+//			list[b].add(a);
+//		}//for
+//		
+//		dfs(p, -1, 0);//펭귄의 위치, -1은 의미없는 초기값, 0은 한 칸씩 이동할때 마다 +1할 초기값.
+////	answer.sort((o1,o2) -> o1-o2);//o1-o2가 음수면 o1을 더 낮은 인덱스로, 양수면 o2를 더 낮은 인덱스로 지정하는 함수..Collections.sort(answer);와 같음.
+//		Collections.sort(answer);
+//		System.out.println(n-1-answer.get(0)-answer.get(1));
+//		}
+//	
+//	static ArrayList<Integer> answer = new ArrayList<Integer>();
+
+//	static void dfs(int cur, int parent, int cnt) {
+//		if(1<= cur && cur<=s) {//현재 위치가 지지대위치와 같다면 answer 리스트에 add(펭귄으로부터 지지대까지의 위치이므로)
+//			answer.add(cnt);
+//			return;
+//		}
+//		for(int i = 0; i<list[cur].size(); i++) {
+//			int next = list[cur].get(i);//cur에는p가 들어감. 펭귄의 위치와 연결된 i블럭을 next로 지정.
+////			펭귄이 한 칸 움직인 후parent 의 위치와 같지 않다면(당연히 같지 않아야 dfs를 호출하기 때문에 parent=-1로 줌.)
+////			두번째 부터는 이동값이 지금 현재 값과 같지 않다면 재귀 호출.
+//			if(next != parent) {
+//				dfs(next, cur, cnt+1);
+//			}
+//		}
+//	}
+//		
+//}
 
