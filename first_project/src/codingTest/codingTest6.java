@@ -36,55 +36,71 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 //1 1 1 1 1 1
 //예제 출력 1 
 //2
+class node1{
+	int y,x;
+	node1(int y, int x) {
+		this.y = y;
+		this.x = x;
+	}
+}
 public class codingTest6 {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private static final int[] DR = {0,0,-1,1};
-    private static final int[] DC = {-1,1,0,0};
-    private void solution() throws Exception {
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int r = Integer.parseInt(st.nextToken());
-        int c = Integer.parseInt(st.nextToken());
-        boolean[][] map = new boolean[r][c];
-        for (int i = 0; i < r; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < c; j++) {
-                if (Integer.parseInt(st.nextToken()) == 0)
-                    map[i][j] = true;
-            }
-        }
-
-        int answer = 0;
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
-                if (!map[i][j]) continue;
-                answer++;
-                Queue<int[]> q = new ArrayDeque<>();
-                q.add(new int[]{i,j});
-                map[i][j] = true;
-                while (!q.isEmpty()) {
-                    int cr = q.peek()[0];
-                    int cc = q.poll()[1];
-                    for (int d = 0; d < 4; d++) {
-                        int nr = cr+DR[d];
-                        int nc = cc+DC[d];
-                        //음수라면.즉 행 또는 열이 0인 경우 반대편으로 넘겨주기
-                        if (nr<0) nr+=r;
-                        if (nc<0) nc+=c;
-                        //map범위를 넘는다면. 즉 행또는 열이 마지막 줄이라면 0번째값도 방문처리 해야함.
-                        nr%=r;
-                        nc%=c;
-
-                        if (!map[nr][nc]) continue;
-                        map[nr][nc] = false;
-                        q.add(new int[]{nr,nc});
-                    }
-                }
-            }
-        }
-        System.out.println(answer);
-    }
-
-    public static void main(String[] args) throws Exception {
-        new codingTest6().solution();
+    static int n,m;
+    static boolean[][] map;
+    static Queue<node1> q = new LinkedList<node1>();
+    static int[] dy = {0,0,1,-1};
+    static int[] dx = {-1,1,0,0};
+	public static void main(String[] args) throws Exception {
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    	StringTokenizer st = new StringTokenizer(br.readLine());
+    	n = Integer.parseInt(st.nextToken());
+    	m = Integer.parseInt(st.nextToken());
+    	
+    	map = new boolean[n][m];
+    	
+//    	map입력받기
+    	for(int i = 0; i<n; i++) {
+    		st = new StringTokenizer(br.readLine());
+    		for(int j = 0; j<m; j++) {
+    			if(Integer.parseInt(st.nextToken())==0) map[i][j] = true;//비어있으면 true 로 변경해줌
+    		}
+    	}//for
+    	
+    	
+    	int answer = 0;
+    	for(int i = 0; i<n; i++) {
+    		for(int j = 0; j<m; j++) {
+    			if(map[i][j]) {
+    				answer++;
+    				
+    				q.add(new node1(i, j));
+    				map[i][j] = true;
+    				while (!q.isEmpty()) {
+						//동서남북으로 채크
+    					node1 qp = q.poll();
+    					int y = qp.y;
+    					int x = qp.x;
+    					for(int k = 0; k<4; k++) {
+    						int ny = y + dy[k];
+    						int nx = x + dx[k];
+    						//만약 음수면 반대쪽으로 이동
+    						if(ny<0) {
+    							ny = ny+n;
+    						}
+    						if(nx<0) {
+    							nx = nx+m;
+    						}
+    						//만약 n,m보다 크다면 나머지로 계산.
+    						ny = ny % n;
+    						nx = nx % m;
+    						if(map[ny][nx]) {
+    							map[ny][nx] = false;
+    							q.add(new node1(ny, nx));
+    						}
+    					}//for
+					}//while
+    			}//if
+    		}//for
+    	}//for
+    	System.out.println(answer);
     }
 }
