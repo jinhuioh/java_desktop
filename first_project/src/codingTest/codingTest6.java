@@ -6,7 +6,8 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
-//입력(내일 다른 풀이 찾아보기!!(2023/03/01))
+//제목: 빠른 오름차순 숫자 탐색
+//입력
 //첫 번째 줄부터 다섯 개의 줄에 걸쳐 보드의 각 칸에 적혀있는 수가 순서대로 주어진다. i번째 줄의 j번째 수는 보드의 (i - 1)번째 행, (j - 1)번째 열에 적혀있는 수를 나타낸다. 보드의 각 칸에 적혀 있는 수는 -1, 0, 1, 2, 3, 4, 5, 6중 하나이다.
 //
 //다음 줄에 학생의 현재 위치 r, c가 빈칸을 사이에 두고 순서대로 주어진다.
