@@ -20,35 +20,8 @@ import java.util.*;
 //....
 //예제 출력 1 
 //4
-class node1{
-	int y;
-	int x;
-	node1(int y, int x){
-		this.y = y;
-		this.x = x;
-	}
-}
 public class codingTest6 {
-	static int n,m,k;
-	static char[][] map;
-	static boolean[][] visited;
-	static Queue<node1> q;
-	static int[] dy = {0,0,1,-1};
-	static int[] dx = {1,-1,0,0};
-	static List<Integer> answer = new ArrayList<>();
+	
 	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st  = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		k = Integer.parseInt(st.nextToken());
-		map = new char[n][m];
-		visited = new boolean[n][m];
-		for(int i = 0; i<n; i++) {
-			String s = br.readLine();
-			for(int j = 0; j<m; j++) {
-				map[i][j] = s.charAt(j); 
-			}
-		}
     }
 }
