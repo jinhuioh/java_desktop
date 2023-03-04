@@ -79,7 +79,7 @@ public class codingTest7 {
 		n = Integer.parseInt(st.nextToken());
 		s = Integer.parseInt(st.nextToken());
 		p = Integer.parseInt(st.nextToken());
-		
+
 		list = new ArrayList[n+1];
 		for(int i = 0; i<n+1; i++) {
 			list[i] = new ArrayList<Integer>();
