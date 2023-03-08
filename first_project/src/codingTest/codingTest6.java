@@ -1,33 +1,34 @@
 package codingTest;
 import java.io.*;
 import java.util.*;
-//문제 : 양치기 꿍
-//양치기 꿍은 맨날 늑대가 나타났다고 마을 사람들을 속였지만 이젠 더이상 마을 사람들이 속지 않는다. 화가 난 꿍은 복수심에 불타 아예 늑대들을 양들이 있는 울타리안에 마구 집어넣어 양들을 잡아먹게 했다.
+//문제 : 점프왕 쩰리
+//‘쩰리’는 점프하는 것을 좋아하는 젤리다. 단순히 점프하는 것에 지루함을 느낀 ‘쩰리’는 새로운 점프 게임을 해보고 싶어 한다. 새로운 점프 게임의 조건은 다음과 같다.
 //
-//하지만 양들은 보통 양들이 아니다. 같은 울타리 영역 안의 양들의 숫자가 늑대의 숫자보다 더 많을 경우 늑대가 전부 잡아먹힌다. 물론 그 외의 경우는 양이 전부 잡아먹히겠지만 말이다.
-//
-//꿍은 워낙 똑똑했기 때문에 이들의 결과는 이미 알고있다. 만약 빈 공간을 '.'(점)으로 나타내고 울타리를 '#', 늑대를 'v', 양을 'k'라고 나타낸다면 여러분은 몇 마리의 양과 늑대가 살아남을지 계산할 수 있겠는가?
-//
-//단, 울타리로 막히지 않은 영역에는 양과 늑대가 없으며 양과 늑대는 대각선으로 이동할 수 없다.
+//‘쩰리’는 가로와 세로의 칸 수가 같은 정사각형의 구역 내부에서만 움직일 수 있다. ‘쩰리’가 정사각형 구역의 외부로 나가는 경우엔 바닥으로 떨어져 즉시 게임에서 패배하게 된다.
+//‘쩰리’의 출발점은 항상 정사각형의 가장 왼쪽, 가장 위의 칸이다. 다른 출발점에서는 출발하지 않는다.
+//‘쩰리’가 이동 가능한 방향은 오른쪽과 아래 뿐이다. 위쪽과 왼쪽으로는 이동할 수 없다.
+//‘쩰리’가 가장 오른쪽, 가장 아래 칸에 도달하는 순간, 그 즉시 ‘쩰리’의 승리로 게임은 종료된다.
+//‘쩰리’가 한 번에 이동할 수 있는 칸의 수는, 현재 밟고 있는 칸에 쓰여 있는 수 만큼이다. 칸에 쓰여 있는 수 초과나 그 미만으로 이동할 수 없다.
+//새로운 게임이 맘에 든 ‘쩰리’는, 계속 게임을 진행해 마침내 최종 단계에 도달했다. 하지만, 게임을 진행하는 구역이 너무 넓어져버린 나머지, 이 게임에서 이길 수 있는지 없는지 가늠할 수 없어졌다. ‘쩰리’는 유능한 프로그래머인 당신에게 주어진 구역에서 승리할 수 있는 지 알아봐 달라고 부탁했다. ‘쩰리’를 도와 주어진 게임 구역에서 끝 점(오른쪽 맨 아래 칸)까지 도달할 수 있는지를 알아보자!
 //
 //입력
-//입력의 첫 번째 줄에는 각각 영역의 세로와 가로의 길이를 나타내는 두 개의 정수 R, C (3 ≤ R, C ≤ 250)가 주어진다.
+//입력의 첫 번째 줄에는 게임 구역의 크기 N (2 ≤ N ≤ 64)이 주어진다.
 //
-//다음 각 R줄에는 C개의 문자가 주어지며 이들은 위에서 설명한 기호들이다.
+//입력의 두 번째 줄부터 마지막 줄까지 게임판의 구역(맵)이 주어진다.
+//
+//게임판의 승리 지점(오른쪽 맨 아래 칸)에는 -1이 쓰여있고, 나머지 칸에는 0 이상 100 이하의 정수가 쓰여있다.
 //
 //출력
-//살아남게 되는 양과 늑대의 수를 각각 순서대로 출력한다.
+//‘쩰리’가 끝 점에 도달할 수 있으면 “HaruHaru”(인용부호 없이), 도달할 수 없으면 “Hing” (인용부호 없이)을 한 줄에 출력합니다.
 //
 //예제 입력 1 
-//6 6
-//...#..
-//.##v#.
-//#v.#.#
-//#.k#.#
-//.###.#
-//...###
+//3
+//1 1 10
+//1 5 1
+//2 2 -1
 //예제 출력 1 
-//0 2
+//HaruHaru
+
 class node1{
 	int y,x;
 	node1(int y, int x){
@@ -35,79 +36,56 @@ class node1{
 		this.x = x;
 	}
 }
+
 public class codingTest6 {
-	static int n,m, k_answer, v_answer;
-	static char[][] map;
+	static int n;
+	static int[][] map;
 	static boolean[][] visited;
-	static Queue<node1> q = new LinkedList<>();
-	static int[] dy = {0,0,1,-1};
-	static int[] dx = {-1,1,0,0};
-	
-	private static void bfs(int i, int j) {
-		int k_num = 0;
-		int v_num = 0;
-		if(map[i][j]=='v') {
-			v_num = 1;
-		}
-		else {
-			k_num = 1;
-		}
+	static int[] dy = {1,0};
+	static int[] dx = {0,1};
+	private static int bfs() {
+		int answer = 0;//-1에 방문하면 1로 바꿈
+		Queue<node1> q = new LinkedList<>();
+		q.add(new node1(0,0));
+		visited[0][0] = true;
 		
-		visited[i][j] = true;
-		q.add(new node1(i,j));
-		
+		Loop1:
 		while(!q.isEmpty()) {
 			node1 qp = q.poll();
-			for(int t = 0; t<4; t++) {
-				int ny = qp.y + dy[t];
-				int nx = qp.x + dx[t];
+			for(int k = 0; k<2; k++) {
+				int ny = map[qp.y][qp.x]*dy[k] + qp.y;
+				int nx = map[qp.y][qp.x]*dx[k] + qp.x;
 				
-				if(ny<0|| nx<0 || ny>=n || nx>=m || map[ny][nx]=='#' || visited[ny][nx]) continue;
-				if(map[ny][nx] == 'v') {
-					v_num ++;
+				if(ny<0 || nx<0 || ny>=n || nx>=n || visited[ny][nx]) continue;
+				if(map[ny][nx]==-1) {
+					answer = 1;
+					break Loop1;
 				}
-				else if(map[ny][nx] == 'k') {
-					k_num++;
-				}
-				 visited[ny][nx] = true;
-				 q.add(new node1(ny,nx));
-				
+				visited[ny][nx] = true;
+				q.add(new node1(ny,nx));
 			}
-		}//while
-		if(v_num>=k_num) {
-			v_answer += v_num;
 		}
-		else {
-			k_answer += k_num;
-		}
+		return answer;
 	}
 	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		map = new char[n][m];
-		visited = new boolean[n][m];
-		
+		n = Integer.parseInt(br.readLine());
+		map = new int[n][n];
+		visited = new boolean[n][n];
 		for(int i = 0; i<n; i++) {
-			String s = br.readLine();
-			for(int j = 0; j<m; j++) {
-				map[i][j] = s.charAt(j); 
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for(int j = 0; j<n; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
 			}//for
 		}//for
-		
-		k_answer = 0;
-		v_answer = 0;
-		for(int i = 0; i<n; i++) {
-			for(int j = 0; j<m; j++) {
-				if(map[i][j] == 'k' || map[i][j] == 'v') {
-					if(!visited[i][j]) {
-						bfs(i, j);
-					}
-				}
-			}
-		}//for
-		System.out.println(k_answer +" "+ v_answer);
+
+		int answer = bfs();
+		if(answer == 1) {
+			System.out.println("HaruHaru");
+		}
+		else{
+			System.out.println("Hing");
+		}
 	}
 }
