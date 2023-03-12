@@ -12,112 +12,50 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.StringTokenizer;
-//문제: 안녕
-//세준이는 성형수술을 한 후에 병원에 너무 오래 입원해 있었다. 이제 세준이가 병원에 입원한 동안 자기를 생각해준 사람들에게 감사하다고 말할 차례이다.
+//배낭문제 알고리즘 공부
+//방법 2 : 다이나믹 프로그래밍 (DP)
+//DP는 큰 문제를 작은 문제로 쪼개서 푸는 방법이다. DP로 해결하려면 각각의 물건이 있는지 없는지를 생각해야 한다.
 //
-//세준이를 생각해준 사람은 총 N명이 있다. 사람의 번호는 1번부터 N번까지 있다. 세준이가 i번 사람에게 인사를 하면 L[i]만큼의 체력을 잃고, J[i]만큼의 기쁨을 얻는다. 세준이는 각각의 사람에게 최대 1번만 말할 수 있다.
+// 
 //
-//세준이의 목표는 주어진 체력내에서 최대한의 기쁨을 느끼는 것이다. 세준이의 체력은 100이고, 기쁨은 0이다. 만약 세준이의 체력이 0이나 음수가 되면, 죽어서 아무런 기쁨을 못 느낀 것이 된다. 세준이가 얻을 수 있는 최대 기쁨을 출력하는 프로그램을 작성하시오.
+//위에서 소개한 문제처럼 물건 ABCD가 있고 무게 제한이 5인 배낭 문제를 다음과 같이 표시하겠다
 //
-//입력
-//첫째 줄에 사람의 수 N(≤ 20)이 들어온다. 둘째 줄에는 각각의 사람에게 인사를 할 때, 잃는 체력이 1번 사람부터 순서대로 들어오고, 셋째 줄에는 각각의 사람에게 인사를 할 때, 얻는 기쁨이 1번 사람부터 순서대로 들어온다. 체력과 기쁨은 100보다 작거나 같은 자연수 또는 0이다.
+//NS ("ABCD", 5)
 //
-//출력
-//첫째 줄에 세준이가 얻을 수 있는 최대 기쁨을 출력한다.
+// 
 //
-//예제 입력 1 
-//3
-//1 21 79
-//20 30 25
-//예제 출력 1 
-//50
-public class codingTest7 {
-	static int n,s,p;//블록,지지대블록,펭귄위치
-	static ArrayList<Integer> list[];
-	static Queue<Integer> q;
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		s = Integer.parseInt(st.nextToken());
-		p = Integer.parseInt(st.nextToken());
+//우선 마지막 물건 D가 가방에 있는 경우, 없는 경우로 나눌 수 있다. 
+//
+//즉, D가 있는 경우 NS(ABC, 1) + 10 (D가 있어서 배낭의 무게 제한은 1이 되고 가치 10을 더한다) 그리고 D가 가방에 없는 경우 NS(ABC, 5) + 0으로 나눌 수 있다.
+//
+// 
+//
+//그림으로 표시하면 다음과 같다.
 
-		list = new ArrayList[n+1];
-		for(int i = 0; i<n+1; i++) {
-			list[i] = new ArrayList<Integer>();
-		}
-		
-		for(int i = 0; i<n-1; i++) {
-			st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			list[a].add(b);
-			list[b].add(a);
-		}
-		//함수실행. 펭귄 위치부터 지지대까지의 거리
-		//매개변수로 다음점(이동점),현재위치,카운트를 준다.
-		dfs(p, -1, 0);
-		Collections.sort(answer);
-		System.out.println(n-answer.get(0)-answer.get(1)-1);
-	}
-	static List<Integer> answer = new ArrayList<Integer>();
-	private static void dfs(int nxt, int cur, int count) {
-		//만약 시작 위치가 s범위 안에 있다면 지지대이므로 answer에 add
-		if(nxt >=1 && nxt<=s) {
-			answer.add(count);
-			return;
-		}
-		for(int i = 0; i<list[nxt].size(); i++) {
-			int next = list[nxt].get(i);
-			if(next != cur) {//이동위치가 현재 위치와 다르다면 재귀호출
-				dfs(next, nxt, count+1);
-			
-			}
-		}
+//N : 물건들의 개수
+//
+//W : 현재 상태의 무게 제한
+//
+// 
+//
+//NS (N-1, W - W [n]) + val [n] : n번째 물건을 배낭에 넣은 경우. 해당 물건을 넣었기 때문에 기존 무게에서 n번째 물건의 무게를 빼줘야 한다. 그리고 n번째 물건의 가치를 더해야 하므로 val [n]을 더한다.
+//
+// 
+//
+//NS (N-1, W) : n번째 물건이 없는 경우. 배낭에 물건을 추가하지 않았기 때문에 무게 W는 그대로이다.
+//
+// 
+//
+//이 점화식에는 변수가 N, W, 총 2가지 이므로 2차원 DP 테이블을 만들어서 해결한다.
+//
+// 
+//
+//세로축이 N, 가로 측이 W를 나타낸다. 우리는 이 예제에서 물건 ABCD 4개가 있고 무게 제한이 5이므로 NS (4, 5)를 구해야 한다. 즉 밑에 있는 테이블에서 빨간색으로 표시되어있는 공간을 구해야 한다.
+
+// https://propercoding.tistory.com/50
+
+public class codingTest7 {
+	public static void main(String[] args) throws IOException{
 	}
 }
-		
-		
-//		n = Integer.parseInt(st.nextToken());
-//		s = Integer.parseInt(st.nextToken());
-//		p = Integer.parseInt(st.nextToken());
-//		
-//		list = new ArrayList[n+1];
-//		for(int i = 0; i<n+1; i++) {
-//			list[i] = new ArrayList<>();
-//		}
-//		
-//		for(int i = 0; i<n-1; i++) {
-//			//연결된 블록들 값 받기
-//			st = new StringTokenizer(br.readLine());
-//			int a = Integer.parseInt(st.nextToken());
-//			int b = Integer.parseInt(st.nextToken());
-//			list[a].add(b);
-//			list[b].add(a);
-//		}//for
-//		
-//		dfs(p, -1, 0);//펭귄의 위치, -1은 의미없는 초기값, 0은 한 칸씩 이동할때 마다 +1할 초기값.
-////	answer.sort((o1,o2) -> o1-o2);//o1-o2가 음수면 o1을 더 낮은 인덱스로, 양수면 o2를 더 낮은 인덱스로 지정하는 함수..Collections.sort(answer);와 같음.
-//		Collections.sort(answer);
-//		System.out.println(n-1-answer.get(0)-answer.get(1));
-//		}
-//	
-//	static ArrayList<Integer> answer = new ArrayList<Integer>();
-
-//	static void dfs(int cur, int parent, int cnt) {
-//		if(1<= cur && cur<=s) {//현재 위치가 지지대위치와 같다면 answer 리스트에 add(펭귄으로부터 지지대까지의 위치이므로)
-//			answer.add(cnt);
-//			return;
-//		}
-//		for(int i = 0; i<list[cur].size(); i++) {
-//			int next = list[cur].get(i);//cur에는p가 들어감. 펭귄의 위치와 연결된 i블럭을 next로 지정.
-////			펭귄이 한 칸 움직인 후parent 의 위치와 같지 않다면(당연히 같지 않아야 dfs를 호출하기 때문에 parent=-1로 줌.)
-////			두번째 부터는 이동값이 지금 현재 값과 같지 않다면 재귀 호출.
-//			if(next != parent) {
-//				dfs(next, cur, cnt+1);
-//			}
-//		}
-//	}
-//		
-//}
 
