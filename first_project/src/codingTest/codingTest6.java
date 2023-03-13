@@ -22,32 +22,30 @@ import java.util.*;
 public class codingTest6 {
 	static int answer;
 	static long n,m;
+	static int bfs() {
+		Queue<Long> q = new LinkedList<>();
+		q.add(n);
+		
+		while(!q.isEmpty()) {
+			int size = q.size();
+			
+			for(int i = 0; i<size; i++) {
+				long qp = q.poll();
+				if(qp==m) {
+					return ++answer;
+				}
+				if(qp*2<=m) q.add(qp*2);
+				if(qp*10+1<=m) q.add(qp*10+1);
+			}
+			answer++;
+		}
+		return -1;
+	}
 	public static void main(String[] args) throws Exception {
 		Scanner sc = new Scanner(System.in);
 		n = sc.nextLong();
 		m = sc.nextLong();
-		answer = 0;
-		int c = 0;
-		while(m>0) {
-			if(m==n) {
-				c=1;
-				break;
-			}
-			if(m%2==0) {
-				m = m/2;
-			}
-			else {
-				System.out.println(m);
-				m = m/10;
-				System.out.println(m);
-			}
-			answer++;
-		}
-		if(c==0) {
-			System.out.println(-1);
-		}
-		else {
-			System.out.println(answer+1);
-		}
+		System.out.println(bfs());
+		
 	}
 }
