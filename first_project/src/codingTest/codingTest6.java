@@ -2,34 +2,29 @@ package codingTest;
 import java.io.*;
 import java.math.BigInteger;
 import java.util.*;
-//문제 : 컵홀더
-//예제 입력 3 
-//9
-//SLLLLSSLL
-//예제 출력 3 
-//7
+//문제 : 약수구하기
 
 public class codingTest6 {
-	static int answer;
-	static long n,m;
+	static int n,k;
+	static List<Integer> num_list;
+	
 	public static void main(String[] args) throws Exception {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		n = Integer.parseInt(br.readLine());
-		String s = br.readLine();
-		answer = 1;
-		for(int i = 0; i<s.length(); i++) {
-			char s_one = s.charAt(i);
-			if (s_one =='S') answer++;
-			else if(s_one == 'L') {
-				i++;
-				answer++;
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		n = Integer.parseInt(st.nextToken());
+		k = Integer.parseInt(st.nextToken());
+		num_list = new ArrayList<>();
+		for(int i = 1; i<=n; i++) {
+			if(n%i==0) {
+				num_list.add(i);
 			}
+		}//for
+		if(k<=num_list.size()) {
+			System.out.println(num_list.get(k-1));
 		}
-		if(answer>n) {
-			System.out.println(n);
-		}else {
-			System.out.println(answer);
+		else {
+			System.out.println(0);
 		}
+		
 	}
 }
