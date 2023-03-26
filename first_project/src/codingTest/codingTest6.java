@@ -25,19 +25,12 @@ import java.util.*;
 //4
 //2
 //0
-class node1{
-	int y;
-	int x;
-	node1(int y, int x){
-		this.y = y;
-		this.x = x;
-	}
-}
 public class codingTest6 {
 	static int n,m,k;
 	static List<List<Integer>> nodeList = new ArrayList<>(); 
 	static List<List<Integer>> answerList = new ArrayList<>(); 
-	static Queue<node1> q = new LinkedList<node1>();
+	static Queue<Integer> q = new LinkedList<Integer>();
+	
 	public static void main(String[] args) throws Exception {
 	
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -59,16 +52,42 @@ public class codingTest6 {
 			nodeList.get(p).add(q);
 			nodeList.get(q).add(p);
 		}
-		System.out.println(nodeList);
 		
 		for(int i = 0; i<=n; i++) {
 			answerList.add(new ArrayList<Integer>());
 		}
 		int count= 1;
-		answerList.get(1).add(1);
-		for(int i = 0; i<nodeList.get(1).size(); i++) {
-			answerList.get(nodeList.get(1).get(i)).add(++count);
+		answerList.get(k).add(1);
+//		for(int i = 0; i<nodeList.get(k).size(); i++) {
+//			answerList.get(nodeList.get(k).get(i)).add(++count);
+//		}
+		
+		for(int i = 0; i<nodeList.get(k).size(); i++) {
+			q.add((nodeList.get(k).get(i)));
 		}
-		System.out.println(answerList);
+		
+		while(!q.isEmpty()) {
+			int qp = q.poll();
+			if(answerList.get(qp).size() == 0) {
+				answerList.get(qp).add(++count);
+			}
+//			System.out.println(answerList +"answerlist 갱신");
+			for(int i = 0; i<nodeList.get(qp).size(); i++) {
+//				System.out.println(nodeList.get(qp).get(i)+" 번째 값이 탐색");
+//				System.out.println(answerList.get( nodeList.get(qp).get(i) )+" answerlist값!");
+				if(answerList.get( nodeList.get(qp).get(i) ).size() == 0) {
+//					System.out.println(nodeList.get(qp).get(i)+" 번째 값이 비어있어요");
+					q.add(nodeList.get(qp).get(i));
+				}
+			}
+		}//while
+		for(int i = 1; i<answerList.size(); i++) {
+			if(answerList.get(i).size() == 0) {
+				System.out.println(0);
+			}
+			else {
+				System.out.println(answerList.get(i).get(0));
+			}
+		}
 	}
 }
