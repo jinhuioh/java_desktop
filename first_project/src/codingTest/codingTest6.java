@@ -26,68 +26,57 @@ import java.util.*;
 //2
 //0
 public class codingTest6 {
-	static int n,m,k;
-	static List<List<Integer>> nodeList = new ArrayList<>(); 
-	static List<List<Integer>> answerList = new ArrayList<>(); 
-	static Queue<Integer> q = new LinkedList<Integer>();
+	private static BufferedReader br;
+	private static StringTokenizer st;
 	
-	public static void main(String[] args) throws Exception {
+	private static int N, M, R;
+	private static List<Integer> []list;
 	
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-	
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		k = Integer.parseInt(st.nextToken());
-	
-		for(int i = 0; i<=n; i++) {
-			nodeList.add(new ArrayList<Integer>());
+	public static void main(String[] args) throws IOException {
+		br=new BufferedReader(new InputStreamReader(System.in));
+		st=new StringTokenizer(br.readLine());
+		N=Integer.parseInt(st.nextToken());
+		M=Integer.parseInt(st.nextToken());
+		R=Integer.parseInt(st.nextToken());
+		list=new ArrayList[N+1];
+		for(int i=1;i<=N;i++) list[i]=new ArrayList<>();
+		
+		for(int i=0;i<M;i++) {
+			st=new StringTokenizer(br.readLine());
+			int u=Integer.parseInt(st.nextToken());
+			int v=Integer.parseInt(st.nextToken());
+			list[u].add(v);
+			list[v].add(u);
+		}
+//		System.out.println(list);
+		for(int i=1;i<=N;i++) Collections.sort(list[i], Collections.reverseOrder());
+//		System.out.println(list);
+		bfs(R);
+	}
+
+	private static void bfs(int x) {
+		Queue<Integer> queue=new LinkedList<>();
+		queue.add(x);
+		
+		boolean []visited=new boolean[N+1];
+		visited[x]=true;
+		
+		int cnt=0;
+		int []order=new int[N+1];
+		while(!queue.isEmpty()) {
+			int q=queue.poll();
+			cnt++;
+			order[q]=cnt;
 			
-		}
-		//m개의 간선 연결
-		for(int i = 0; i<n; i++) {
-			st = new StringTokenizer(br.readLine());
-			int p = Integer.parseInt(st.nextToken());
-			int q = Integer.parseInt(st.nextToken());
-			nodeList.get(p).add(q);
-			nodeList.get(q).add(p);
-		}
-		
-		for(int i = 0; i<=n; i++) {
-			answerList.add(new ArrayList<Integer>());
-		}
-		int count= 1;
-		answerList.get(k).add(1);
-//		for(int i = 0; i<nodeList.get(k).size(); i++) {
-//			answerList.get(nodeList.get(k).get(i)).add(++count);
-//		}
-		
-		for(int i = 0; i<nodeList.get(k).size(); i++) {
-			q.add((nodeList.get(k).get(i)));
-		}
-		
-		while(!q.isEmpty()) {
-			int qp = q.poll();
-			if(answerList.get(qp).size() == 0) {
-				answerList.get(qp).add(++count);
-			}
-//			System.out.println(answerList +"answerlist 갱신");
-			for(int i = 0; i<nodeList.get(qp).size(); i++) {
-//				System.out.println(nodeList.get(qp).get(i)+" 번째 값이 탐색");
-//				System.out.println(answerList.get( nodeList.get(qp).get(i) )+" answerlist값!");
-				if(answerList.get( nodeList.get(qp).get(i) ).size() == 0) {
-//					System.out.println(nodeList.get(qp).get(i)+" 번째 값이 비어있어요");
-					q.add(nodeList.get(qp).get(i));
+			for(int i:list[q]) {
+				if(!visited[i]) {
+					visited[i]=true;
+					queue.add(i);
 				}
 			}
-		}//while
-		for(int i = 1; i<answerList.size(); i++) {
-			if(answerList.get(i).size() == 0) {
-				System.out.println(0);
-			}
-			else {
-				System.out.println(answerList.get(i).get(0));
-			}
 		}
+		
+		for(int i=1;i<=N;i++) System.out.println(order[i]);
 	}
+	
 }
