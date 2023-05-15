@@ -58,14 +58,6 @@ import java.util.StringTokenizer;
 //....#
 //.#...
 //.....
-class node{
-	int y;
-	int x;
-	node(int y, int x){
-		this.y = y;
-		this.x = x;
-	}
-}
 
 public class codingTest4 {
 	static boolean[][] visited;
